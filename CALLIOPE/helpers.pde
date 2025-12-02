@@ -21,7 +21,7 @@ void Back()
 
 void AskGemini()
 {
-  String prompt = geminiQuestionField.getPromptText();
-  println("done");
-  println(prompt);
+  String prompt = askAwayField.getText();
+  println("promt recieved!");
+  println(PromptGemini(prompt));
 }
