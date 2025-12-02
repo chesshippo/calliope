@@ -4,7 +4,7 @@ import java.io.*;
 import com.google.genai.Client;
 import com.google.genai.types.GenerateContentResponse;
 
-public void PromptGemini(String prompt)
+String PromptGemini(String prompt)
 {
     Client client = Client.builder().apiKey(API_KEY).build();
     
@@ -14,7 +14,9 @@ public void PromptGemini(String prompt)
         null
     );
 
-    println(response.text());
-
     client.close();
+    println(response.text());
+    return response.text();
+
+    
 }
