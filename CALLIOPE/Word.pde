@@ -1,6 +1,6 @@
 //Paramaters will be in capital for ease
-int CANVAS_WIDTH = 650;
-int CANVAS_HEIGHT = 1000;
+int CANVAS_WIDTH = 1200;
+int CANVAS_HEIGHT = 800;
 int TEXT_AREA_WIDTH = 600;  //Width of the text display area
 int TEXT_AREA_HEIGHT = 600; //Height of the text display area
 int TEXT_MARGIN = 20;       //Margin around text within the display area
@@ -21,48 +21,48 @@ class Word {
   float yPosition;      //Y position for display (base position, will be adjusted for scrolling)
   boolean isHighlighted;  //Whether this word is highlighted
   color backgroundColor;  //Background color for highlighting
-
+  
   Word(String text, int pos) {
     wordText = text;
     positionInEssay = pos;
-    lineNumber = 0;
-    xPosition = 0;
-    yPosition = 0;
+    lineNumber = 0; 
+    xPosition = 0; 
+    yPosition = 0;   
     isHighlighted = false;
     backgroundColor = color(255);  //Default white background
   }
-
+  
   //Display the word at its position (adjusted for scrolling)
   void display(float scrollOffset) {
     float displayY = yPosition + scrollOffset;
-
+    
     //Draw background if highlighted
     if (isHighlighted) {
       textSize(16);
       float wordWidth = textWidth(wordText);
       float wordHeight = LINE_HEIGHT;
-
+      
       fill(backgroundColor);
       noStroke();
       rect(xPosition, displayY - wordHeight + 5, wordWidth, wordHeight);
     }
-
+    
     //Draw text
     fill(0);
     text(wordText, xPosition, displayY);
   }
-
+  
   //Check if mouse click is within this word's bounds
   boolean isMouseOver(float scrollOffset, float mouseX, float mouseY) {
     float displayY = yPosition + scrollOffset;
     textSize(16);
     float wordWidth = textWidth(wordText);
     float wordHeight = LINE_HEIGHT;
-
-    return mouseX >= xPosition &&
-      mouseX <= xPosition + wordWidth &&
-      mouseY >= displayY - wordHeight + 5 &&
-      mouseY <= displayY + 5;
+    
+    return mouseX >= xPosition && 
+           mouseX <= xPosition + wordWidth &&
+           mouseY >= displayY - wordHeight + 5 && 
+           mouseY <= displayY + 5;
   }
 }
 
@@ -77,22 +77,73 @@ float maxScrollY = 0;  // Maximum scroll position (bottom of essay)
 //Integer is like int except it can store null.
 Integer firstSelectedWordIndex = null;  // Index of first clicked word (null if none selected)
 
+void setup() {
+  size(1200, 800);
+  
+  //Puts essay into words (split by spaces to preserve punctuation)
+  words = new ArrayList<Word>();
+  String[] wordStrings = split(essay, ' ');
+  
+  for (int i = 0; i < wordStrings.length; i++) {
+    if (wordStrings[i].length() > 0) {  // Skip empty strings
+      words.add(new Word(wordStrings[i], i));
+    }
+  }
+  
+  layoutWords();
+  
+  calculateScrollBounds();
+}
 
+void draw() {
+  background(255);
+  
+  //Button will be in the GUI in the real project
+  drawUnhighlightButton();
+  
+  //Draw the text display area (square/rectangle in center)
+  float textAreaX = (CANVAS_WIDTH - TEXT_AREA_WIDTH) / 2;
+  float textAreaY = (CANVAS_HEIGHT - TEXT_AREA_HEIGHT) / 2;
+  
+  fill(240);
+  stroke(200);
+  rect(textAreaX, textAreaY, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT);
+  
+  //Set up text rendering
+  fill(0);
+  textSize(16);
+  textAlign(LEFT, BASELINE);
+  
+  
+  pushMatrix();
+  
+  //clip makes it so all words not in the text area are hidden.
+  //The only way this is undone is with push and pop matrix
+  //Push matrix saves everything before the clip, and pop matrix restores it back.
+  clip(textAreaX, textAreaY, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT);
+  
+  //Display all words with scroll offset
+  for (Word w : words) {
+    w.display(scrollY);
+  }
+  
+  popMatrix();
+}
 
 //Calculate positions for all words
 void layoutWords() {
   float textAreaX = (CANVAS_WIDTH - TEXT_AREA_WIDTH) / 2;
   float textAreaY = (CANVAS_HEIGHT - TEXT_AREA_HEIGHT) / 2;
-
+  
   float currentX = textAreaX + TEXT_MARGIN;
   float currentY = textAreaY + TEXT_MARGIN + LINE_HEIGHT;
   int currentLine = 0;
-
+  
   textSize(16);
-
+  
   for (Word w : words) {
     float wordWidth = textWidth(w.wordText + " ");
-
+    
     // heck if word fits on current line
     if (currentX + wordWidth > textAreaX + TEXT_AREA_WIDTH - TEXT_MARGIN) {
       //Move to next line
@@ -100,12 +151,12 @@ void layoutWords() {
       currentY += LINE_HEIGHT;
       currentX = textAreaX + TEXT_MARGIN;
     }
-
+    
     //Set word properties
     w.lineNumber = currentLine;
     w.xPosition = currentX;
     w.yPosition = currentY;
-
+    
     //Move x position for next word
     currentX += wordWidth + WORD_SPACING;
   }
@@ -118,10 +169,10 @@ void calculateScrollBounds() {
     maxScrollY = 0;
     return;
   }
-
+  
   float textAreaY = (CANVAS_HEIGHT - TEXT_AREA_HEIGHT) / 2;
   float topMargin = textAreaY + TEXT_MARGIN + LINE_HEIGHT;
-
+  
   //Find the bottommost word
   float bottomY = 0;
   for (Word w : words) {
@@ -129,12 +180,12 @@ void calculateScrollBounds() {
       bottomY = w.yPosition;
     }
   }
-
+  
   //Calculate scroll limits
   //When scrolled all the way up, first word should be at top margin, and vice versa
   float contentHeight = bottomY - topMargin + LINE_HEIGHT;
   float visibleHeight = TEXT_AREA_HEIGHT - (TEXT_MARGIN * 2);
-
+  
   if (contentHeight <= visibleHeight) {
     //Content fits in view, no scrolling needed
     minScrollY = 0;
@@ -151,7 +202,7 @@ void calculateScrollBounds() {
 void mouseWheel(MouseEvent event) {
   float scrollAmount = event.getCount() * SCROLL_SPEED;
   scrollY += scrollAmount;
-
+  
   scrollY = constrain(scrollY, maxScrollY, minScrollY);
 }
 
@@ -159,15 +210,15 @@ void mouseWheel(MouseEvent event) {
 void mousePressed() {
   //Check if clicking on unhighlight button
   if (mouseX >= 0 && mouseX <= UNHIGHLIGHT_BUTTON_SIZE &&
-    mouseY >= 0 && mouseY <= UNHIGHLIGHT_BUTTON_SIZE) {
+      mouseY >= 0 && mouseY <= UNHIGHLIGHT_BUTTON_SIZE) {
     unhighlightAll();
     firstSelectedWordIndex = null;
     return;
   }
-
+  
   //Check if clicking on a word
   int clickedWordIndex = getWordAtMousePosition();
-
+  
   if (clickedWordIndex != -1) {
     if (firstSelectedWordIndex == null) {
       // First click - select this word
@@ -177,7 +228,7 @@ void mousePressed() {
       // Second click - highlight range between first and second word
       int startIndex = min(firstSelectedWordIndex, clickedWordIndex);
       int endIndex = max(firstSelectedWordIndex, clickedWordIndex);
-
+      
       highlightRange(startIndex, endIndex);
       firstSelectedWordIndex = null;  // Reset for next selection
     }
@@ -192,20 +243,20 @@ void mousePressed() {
 int getWordAtMousePosition() {
   float textAreaX = (CANVAS_WIDTH - TEXT_AREA_WIDTH) / 2;
   float textAreaY = (CANVAS_HEIGHT - TEXT_AREA_HEIGHT) / 2;
-
+  
   // Check if mouse is within text area
   if (mouseX < textAreaX || mouseX > textAreaX + TEXT_AREA_WIDTH ||
-    mouseY < textAreaY || mouseY > textAreaY + TEXT_AREA_HEIGHT) {
+      mouseY < textAreaY || mouseY > textAreaY + TEXT_AREA_HEIGHT) {
     return -1;
   }
-
+  
   //Check each word to see if mouse is over it
   for (int i = 0; i < words.size(); i++) {
     if (words.get(i).isMouseOver(scrollY, mouseX, mouseY)) {
       return i;
     }
   }
-
+  
   return -1;
 }
 
@@ -230,12 +281,12 @@ void drawUnhighlightButton() {
   fill(200);
   stroke(150);
   rect(0, 0, UNHIGHLIGHT_BUTTON_SIZE, UNHIGHLIGHT_BUTTON_SIZE);
-
+  
   fill(100);
   textSize(12);
   textAlign(CENTER, CENTER);
   text("X", UNHIGHLIGHT_BUTTON_SIZE / 2, UNHIGHLIGHT_BUTTON_SIZE / 2);
-
+  
   //Reset text alignment
   textAlign(LEFT, BASELINE);
 }
