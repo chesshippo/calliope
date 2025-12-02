@@ -21,6 +21,9 @@ void mousePressed() {
     firstSelectedWordIndex = null;
     return;
   }
+
+
+  
   
   //Check if clicking on a word
   int clickedWordIndex = getWordAtMousePosition();
