@@ -1,5 +1,3 @@
-//There's some setup stuff that will probably not be part of the word class.
-
 //Paramaters will be in capital for ease
 int CANVAS_WIDTH = 1200;
 int CANVAS_HEIGHT = 800;
@@ -225,6 +223,7 @@ void mousePressed() {
     if (firstSelectedWordIndex == null) {
       // First click - select this word
       firstSelectedWordIndex = clickedWordIndex;
+      unhighlightAll();
     } else {
       // Second click - highlight range between first and second word
       int startIndex = min(firstSelectedWordIndex, clickedWordIndex);
@@ -235,6 +234,7 @@ void mousePressed() {
     }
   } else {
     //Clicked outside words - reset selection
+    unhighlightAll();
     firstSelectedWordIndex = null;
   }
 }
