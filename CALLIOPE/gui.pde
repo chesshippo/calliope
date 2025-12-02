@@ -32,13 +32,13 @@ synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:contr
   appc.background(230);
 } //_CODE_:controlsWindow:814485:
 
-public void OnTypeInGeminiQuestionField(GTextField source, GEvent event) { //_CODE_:geminiQuestionField:261763:
-  println("geminiQuestionField - GTextField >> GEvent." + event + " @ " + millis());
-} //_CODE_:geminiQuestionField:261763:
-
 public void OnAskGemini(GButton source, GEvent event) { //_CODE_:askGeminiBbutton:328632:
   AskGemini();
 } //_CODE_:askGeminiBbutton:328632:
+
+public void OnTypeInAskAwayField(GTextArea source, GEvent event) { //_CODE_:askAwayField:298145:
+  println("askAwayField - GTextArea >> GEvent." + event + " @ " + millis());
+} //_CODE_:askAwayField:298145:
 
 
 
@@ -63,12 +63,12 @@ public void createGUI(){
   controlsWindow.noLoop();
   controlsWindow.setActionOnClose(G4P.KEEP_OPEN);
   controlsWindow.addDrawHandler(this, "win_draw1");
-  geminiQuestionField = new GTextField(controlsWindow, 60, 177, 148, 66, G4P.SCROLLBARS_NONE);
-  geminiQuestionField.setOpaque(true);
-  geminiQuestionField.addEventHandler(this, "OnTypeInGeminiQuestionField");
   askGeminiBbutton = new GButton(controlsWindow, 96, 251, 80, 30);
   askGeminiBbutton.setText("Ask away!");
   askGeminiBbutton.addEventHandler(this, "OnAskGemini");
+  askAwayField = new GTextArea(controlsWindow, 76, 162, 120, 80, G4P.SCROLLBARS_VERTICAL_ONLY);
+  askAwayField.setOpaque(true);
+  askAwayField.addEventHandler(this, "OnTypeInAskAwayField");
   controlsWindow.loop();
 }
 
@@ -78,5 +78,5 @@ GButton infoButton;
 GButton startButton; 
 GButton backButton; 
 GWindow controlsWindow;
-GTextField geminiQuestionField; 
 GButton askGeminiBbutton; 
+GTextArea askAwayField; 
