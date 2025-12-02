@@ -18,3 +18,10 @@ void Back()
   
   stage = WindowStage.EssayHelp;
 }
+
+void AskGemini()
+{
+  String prompt = geminiQuestionField.getPromptText();
+  println("done");
+  println(prompt);
+}

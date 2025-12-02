@@ -37,7 +37,7 @@ public void OnTypeInGeminiQuestionField(GTextField source, GEvent event) { //_CO
 } //_CODE_:geminiQuestionField:261763:
 
 public void OnAskGemini(GButton source, GEvent event) { //_CODE_:askGeminiBbutton:328632:
-  println("askGeminiBbutton - GButton >> GEvent." + event + " @ " + millis());
+  AskGemini();
 } //_CODE_:askGeminiBbutton:328632:
 
 

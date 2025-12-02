@@ -37,5 +37,5 @@ void draw()
     
 
   }
-  println(stage);
+  //println(stage);
 }
