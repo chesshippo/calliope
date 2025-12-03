@@ -18,7 +18,9 @@ class Word {
   }
   
   //Display the word at its position (adjusted for scrolling)
-  void display() {
+  void display(float scrollOffset) {
+    // Calculate adjusted Y position based on scroll offset
+    float adjustedY = yPosition + scrollOffset;
     
     //Draw background if highlighted
     if (isHighlighted) {
@@ -28,25 +30,24 @@ class Word {
       
       fill(backgroundColor);
       noStroke();
-      rect(xPosition, yPosition - wordHeight + 5, wordWidth, wordHeight);
+      rect(xPosition, adjustedY - wordHeight + 5, wordWidth, wordHeight);
     }
     
     //Draw text
     fill(0);
-    text(wordText, xPosition, yPosition);
+    text(wordText, xPosition, adjustedY);
   }
   
-  //Check if mouse click is within this word's bounds
+  //Check if mouse click is within this word's bounds (adjusted for scroll)
   boolean isMouseOver(float scrollOffset, float mouseX, float mouseY) {
-    
-
     textSize(16);
     float wordWidth = textWidth(wordText);
     float wordHeight = LINE_HEIGHT;
+    float adjustedY = yPosition + scrollOffset;
     
     return mouseX >= xPosition && 
            mouseX <= xPosition + wordWidth &&
-           mouseY >= yPosition - wordHeight + 5 && 
-           mouseY <= yPosition + 5;
+           mouseY >= adjustedY - wordHeight + 5 && 
+           mouseY <= adjustedY + 5;
   }
 }
