@@ -15,7 +15,7 @@
  */
 
 public void OnInfoClicked(GButton source, GEvent event) { //_CODE_:infoButton:464716:
-  println("infoButton - GButton >> GEvent." + event + " @ " + millis());
+ stage = WindowStage.Info;
 } //_CODE_:infoButton:464716:
 
 public void OnStartClicked(GButton source, GEvent event) { //_CODE_:startButton:936311:
@@ -55,7 +55,7 @@ public void createGUI(){
   startButton = new GButton(this, 415, 451, 170, 70);
   startButton.setText("START");
   startButton.addEventHandler(this, "OnStartClicked");
-  backButton = new GButton(this, 21, 26, 80, 30);
+  backButton = new GButton(this, 12, 5, 80, 30);
   backButton.setText("Back");
   backButton.setLocalColorScheme(GCScheme.RED_SCHEME);
   backButton.addEventHandler(this, "OnBackClicked");

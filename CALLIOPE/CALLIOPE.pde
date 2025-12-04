@@ -14,6 +14,7 @@ int SCROLL_SPEED = 5;       //Pixels to scroll per key press
 int UNHIGHLIGHT_BUTTON_SIZE = 30;  //Size of unhighlight button
 color HIGHLIGHT_COLOR = color(173, 216, 230);  //Light blue for highlighting
 
+
 //Feedback panel constants
 int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;  //Right side of essay
 int FEEDBACK_PANEL_Y = TEXT_POSITION_Y;  //Same Y as essay
@@ -50,25 +51,25 @@ WindowStage stage = WindowStage.Home;
 void setup() {
   createGUI();
   size(1000, 650);
-  
+
   // Load API key
-  API_KEY = loadStrings("api_key.txt")[0].trim();
-  
+  //API_KEY = loadStrings("api_key.txt")[0].trim();
+
   //Puts essay into words (split by spaces to preserve punctuation)
   words = new ArrayList<Word>();
   String[] wordStrings = split(essay, ' ');
-  
+
   for (int i = 0; i < wordStrings.length; i++) {
     if (wordStrings[i].length() > 0) {  // Skip empty strings
       words.add(new Word(wordStrings[i], i));
     }
   }
-  
+
   layoutWords();
-  
+
   calculateScrollBounds();
-  
-  
+
+
   controlsWindow.setVisible(false);
   backButton.setVisible(false);
 }
@@ -78,10 +79,11 @@ void draw()
   if (stage == WindowStage.EssayHelp)
   {
     drawEditingScreen();
-  }
-  else if (stage == WindowStage.Home)
+  } else if (stage == WindowStage.Home)
   {
     DrawHomeScreen();
+  } else if ( stage==WindowStage.Info) {
+    DrawInfoScreen();
   }
 }
 
@@ -89,46 +91,75 @@ void DrawHomeScreen()
 {
   background(0, 0, 50);
   textAlign(CENTER);
-  textSize(100);
+  textSize(80);
   text("CALLIOPE", width / 2, 250);
+  backButton.setVisible(false);
 }
+
+void DrawInfoScreen() {
+  int xcircle=10;
+  int ycircle=100;
+  int r=20;
+
+  background(0, 0, 50);
+  textAlign(CENTER);
+  textSize(50);
+  text("INFO", width/2, 50);
+  text("------------------", width/2, 65);
+  textSize(20);
+  textAlign(CENTER);
+  text("Have you ever wanted to get an A in your English Class. Well don’t worry, calliope’s got you covered.", 425,100);
+  text("calliope has a wide range of features that can assist users in reviewing their essays.",350,130);
+  text("From Spell Checking to punctuation checking and  analyzing what type of essay the user has highlighted  e.g Informal or formal .", 440, 160);
+  textAlign(CENTER);
+  textSize(50);
+  text("FEATURES", width/2,250);
+  text("------------------", width/2, 265);
+  textSize(15);
+  text("Spell Checker", width/2 , 275);
+  
+  backButton.setVisible(true);
+  startButton.setVisible(false);
+  infoButton.setVisible(false); //backButton, startButton, and infoButton
+}
+
 
 void drawEditingScreen() {
   background(0, 0, 50);
-  
+
   //Draw the text display area (square/rectangle on left)
   fill(240);
   stroke(200);
   rect(TEXT_POSITION_X, TEXT_POSITION_Y, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT);
-  
+
   //Draw the feedback panel (on the right)
   fill(250);
   stroke(200);
   rect(FEEDBACK_PANEL_X, FEEDBACK_PANEL_Y, FEEDBACK_PANEL_WIDTH, FEEDBACK_PANEL_HEIGHT);
-  
+
   //Draw feedback panel title
   fill(50);
   textSize(18);
   textAlign(LEFT, TOP);
   text("Gemini Feedback", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
-  
+
   //Draw feedback text (with word wrapping and scrolling)
   if (geminiResponse.length() > 0) {
     pushMatrix();
-    
+
     //Clip to feedback panel area
     clip(FEEDBACK_PANEL_X, FEEDBACK_PANEL_Y, FEEDBACK_PANEL_WIDTH, FEEDBACK_PANEL_HEIGHT);
-    
+
     fill(30);
     textSize(14);
     textAlign(LEFT, TOP);
-    
+
     //Word wrap the response text
     float textX = FEEDBACK_PANEL_X + FEEDBACK_MARGIN;
     float baseTextY = FEEDBACK_PANEL_Y + FEEDBACK_MARGIN + 30;
     float textY = baseTextY + feedbackScrollY;
     float textWidth = FEEDBACK_PANEL_WIDTH - (FEEDBACK_MARGIN * 2);
-    
+
     //Clean and split response into words - handle punctuation better
     String cleanResponse = geminiResponse;
     //Replace newlines and tabs with spaces
@@ -138,68 +169,68 @@ void drawEditingScreen() {
     float currentX = textX;
     float currentY = textY;
     float lineHeight = 20;
-    
+
     for (String word : responseWords) {
       if (word.length() == 0) continue;  //Skip empty words
-      
+
       //Add space after word for measurement
       String wordWithSpace = word + " ";
       float wordWidth = textWidth(wordWithSpace);
-      
+
       if (currentX + wordWidth > textX + textWidth && currentX > textX) {
         //Move to next line (only if we're not at the start of a line)
         currentY += lineHeight;
         currentX = textX;
       }
-      
+
       //Draw the word
       text(word + " ", currentX, currentY);
       currentX += wordWidth;
     }
-    
+
     popMatrix();
   } else {
     //Show placeholder text
     fill(150);
     textSize(12);
     textAlign(LEFT, TOP);
-    text("Highlight text and ask Gemini\nfor feedback...", 
-         FEEDBACK_PANEL_X + FEEDBACK_MARGIN, 
-         FEEDBACK_PANEL_Y + FEEDBACK_MARGIN + 30);
+    text("Highlight text and ask Gemini\nfor feedback...",
+      FEEDBACK_PANEL_X + FEEDBACK_MARGIN,
+      FEEDBACK_PANEL_Y + FEEDBACK_MARGIN + 30);
   }
-  
+
   //Set up text rendering for essay
   fill(0);
   textSize(16);
   textAlign(LEFT, BASELINE);
-  
+
   pushMatrix();
-  
+
   //clip makes it so all words not in the text area are hidden.
   //The only way this is undone is with push and pop matrix
   //Push matrix saves everything before the clip, and pop matrix restores it back.
   clip(TEXT_POSITION_X, TEXT_POSITION_Y, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT);
-  
+
   //Display all words with scroll offset
   for (Word w : words) {
     w.display(scrollY);
   }
-  
+
   popMatrix();
 }
 
 //Calculate positions for all words
 void layoutWords() {
-  
+
   float currentX = TEXT_POSITION_X + TEXT_MARGIN;
   float currentY = TEXT_POSITION_Y + TEXT_MARGIN + LINE_HEIGHT;
   int currentLine = 0;
-  
+
   textSize(16);
-  
+
   for (Word w : words) {
     float wordWidth = textWidth(w.wordText + " ");
-    
+
     // check if word fits on current line
     if (currentX + wordWidth > TEXT_POSITION_X + TEXT_AREA_WIDTH - TEXT_MARGIN) {
       //Move to next line
@@ -207,12 +238,12 @@ void layoutWords() {
       currentY += LINE_HEIGHT;
       currentX = TEXT_POSITION_X + TEXT_MARGIN;
     }
-    
+
     //Set word properties
     w.lineNumber = currentLine;
     w.xPosition = currentX;
     w.yPosition = currentY;
-    
+
     //Move x position for next word
     currentX += wordWidth + WORD_SPACING;
   }
@@ -225,10 +256,10 @@ void calculateScrollBounds() {
     maxScrollY = 0;
     return;
   }
-  
- 
+
+
   float topMargin = TEXT_POSITION_Y + TEXT_MARGIN + LINE_HEIGHT;
-  
+
   //Find the bottommost word
   float bottomY = 0;
   for (Word w : words) {
@@ -236,12 +267,12 @@ void calculateScrollBounds() {
       bottomY = w.yPosition;
     }
   }
-  
+
   //Calculate scroll limits
   //When scrolled all the way up, first word should be at top margin, and vice versa
   float contentHeight = bottomY - topMargin + LINE_HEIGHT;
   float visibleHeight = TEXT_AREA_HEIGHT - (TEXT_MARGIN * 2);
-  
+
   if (contentHeight <= visibleHeight) {
     //Content fits in view, no scrolling needed
     minScrollY = 0;
@@ -257,20 +288,20 @@ void calculateScrollBounds() {
 //Find which word (if any) is at the current mouse position
 int getWordAtMousePosition() {
 
-  
+
   // Check if mouse is within text area
   if (mouseX < TEXT_POSITION_X || mouseX > TEXT_POSITION_X + TEXT_AREA_WIDTH ||
-      mouseY < TEXT_POSITION_Y || mouseY > TEXT_POSITION_Y + TEXT_AREA_HEIGHT) {
+    mouseY < TEXT_POSITION_Y || mouseY > TEXT_POSITION_Y + TEXT_AREA_HEIGHT) {
     return -1;
   }
-  
+
   //Check each word to see if mouse is over it (accounting for scroll offset)
   for (int i = 0; i < words.size(); i++) {
     if (words.get(i).isMouseOver(scrollY, mouseX, mouseY)) {
       return i;
     }
   }
-  
+
   return -1;
 }
 
@@ -311,23 +342,23 @@ void calculateFeedbackScrollBounds() {
     maxFeedbackScrollY = 0;
     return;
   }
-  
+
   //Calculate content height by simulating word wrapping (must match drawing code exactly)
   textSize(14);
   float textWidth = FEEDBACK_PANEL_WIDTH - (FEEDBACK_MARGIN * 2);
   String cleanResponse = geminiResponse;
   cleanResponse = cleanResponse.replace("\n", " ").replace("\r", " ").replace("\t", " ");
   String[] responseWords = split(cleanResponse, ' ');
-  
+
   float currentX = 0;
   float lineHeight = 20;
   int lineCount = 1;  // Start with first line
-  
+
   for (String word : responseWords) {
     if (word.length() == 0) continue;
     String wordWithSpace = word + " ";
     float wordWidth = textWidth(wordWithSpace);
-    
+
     // Check if word fits on current line
     if (currentX + wordWidth > textWidth && currentX > 0) {
       // Move to next line
@@ -336,11 +367,11 @@ void calculateFeedbackScrollBounds() {
     }
     currentX += wordWidth;
   }
-  
+
   // Calculate total content height
   feedbackContentHeight = lineCount * lineHeight;
   float visibleHeight = FEEDBACK_PANEL_HEIGHT - (FEEDBACK_MARGIN * 2) - 30; // Subtract title area
-  
+
   // Calculate scroll bounds
   // minFeedbackScrollY: most negative (when scrolled to bottom, showing last content)
   // maxFeedbackScrollY: 0 (when at top, showing first content)
@@ -353,7 +384,7 @@ void calculateFeedbackScrollBounds() {
     minFeedbackScrollY = 0;
     maxFeedbackScrollY = 0;
   }
-  
+
   // Ensure current scroll position is within bounds
   feedbackScrollY = constrain(feedbackScrollY, minFeedbackScrollY, maxFeedbackScrollY);
 }
