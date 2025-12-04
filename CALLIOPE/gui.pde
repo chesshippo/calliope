@@ -48,6 +48,10 @@ public void OnRefreshEssay(GButton source, GEvent event) { //_CODE_:refreshEssay
   RefreshEssayText();
 } //_CODE_:refreshEssayButton:454847:
 
+public void OnSpellcheckButtonClicked(GButton source, GEvent event) { //_CODE_:spellcheckButton:443578:
+  SpellCheckEssay();
+} //_CODE_:spellcheckButton:443578:
+
 
 
 // Create all the GUI controls. 
@@ -85,6 +89,10 @@ public void createGUI(){
   refreshEssayButton.setText("Refresh");
   refreshEssayButton.setLocalColorScheme(GCScheme.RED_SCHEME);
   refreshEssayButton.addEventHandler(this, "OnRefreshEssay");
+  spellcheckButton = new GButton(controlsWindow, 28, 52, 80, 30);
+  spellcheckButton.setText("Spellcheck");
+  spellcheckButton.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+  spellcheckButton.addEventHandler(this, "OnSpellcheckButtonClicked");
   controlsWindow.loop();
 }
 
@@ -98,3 +106,4 @@ GButton askGeminiBbutton;
 GTextArea askAwayField; 
 GTextField essayPathField; 
 GButton refreshEssayButton; 
+GButton spellcheckButton; 

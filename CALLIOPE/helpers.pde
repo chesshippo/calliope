@@ -1,3 +1,6 @@
+import pt.tumba.spell.SpellChecker;
+
+
 void EnterEssayEditor()
 {
     startButton.setVisible(false);
@@ -97,5 +100,18 @@ void PutEssayIntoWords()
   for (Word w : words)
   {
     println(w.wordText);
+  }
+}
+
+void SpellCheckEssay()
+{
+  for (Word w : words)
+  {
+    SpellChecker checker = new SpellChecker();
+    checker.initialize();
+    
+    String correction = checker.spellCheckWord(w.wordText);
+    
+    println(correction);
   }
 }
