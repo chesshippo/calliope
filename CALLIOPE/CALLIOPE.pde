@@ -25,11 +25,10 @@ String highlighted = "";  //Deprecated - use getHighlightedText() instead
 String geminiResponse = "";  //Stores Gemini's response to display in feedback panel
 
 //Text content
-String essay = "In an increasingly interconnected world, the ability to communicate across cultures is more valuable than ever. One of the most effective ways to build this skill is by learning a second language. While some people view language study as just another school requirement, it actually offers far-reaching advantages that extend beyond the classroom. Learning a second language improves cognitive abilities, expands career opportunities, and deepens cultural understanding, making it a valuable investment in one’s personal and professional future. To begin with, learning a second language strengthens the brain. Research has shown that bilingual individuals often have better memory, problem-solving skills, and mental flexibility than monolingual speakers. When students switch between languages, they train their brains to focus, ignore distractions, and process information more efficiently. This constant mental exercise can even delay age-related cognitive decline later in life. In other words, studying another language is not only about vocabulary and grammar; it is also a workout for the mind that can improve overall academic performance and long-term brain health. In addition to cognitive benefits, being bilingual creates valuable career opportunities. In today’s globalized economy, many companies work with international clients and partners, making employees who speak multiple languages especially attractive. A job candidate who can communicate in more than one language may be able to negotiate deals, assist customers, or collaborate with colleagues in ways that others cannot. This skill can lead to higher salaries, more travel, and a wider range of job options in fields such as business, tourism, translation, diplomacy, and education. Thus, learning a second language is not just an academic achievement; it is a practical tool that can make a candidate stand out in a competitive job market. Moreover, learning another language helps individuals develop a deeper appreciation for other cultures. Language and culture are closely linked, and studying a language often involves learning about the traditions, values, and history of the people who speak it. This exposure can reduce stereotypes and encourage empathy by showing that there are many valid ways of living and thinking. For example, understanding cultural customs—such as greeting styles, holidays, or table manners—can make communication more respectful and meaningful. In a world where misunderstandings can quickly lead to conflict, the ability to see issues from multiple cultural perspectives is an important skill for building tolerance and cooperation. Of course, learning a second language can be challenging. It requires time, patience, and consistent practice. Some people may worry that they will never sound like a native speaker or that they will make embarrassing mistakes. However, these challenges are also opportunities for growth. Making mistakes is a natural part of the learning process, and each error helps learners understand the language more deeply. With modern resources—such as language apps, online courses, and conversation partners—it is easier than ever to practice regularly and improve steadily. In conclusion, the benefits of learning a second language are substantial and long-lasting. It sharpens the mind, opens doors to diverse career paths, and fosters greater cultural understanding. Although the process can be demanding, the rewards far outweigh the difficulties. In a world where communication and cooperation are essential, learning another language is not just an academic task but a powerful step toward becoming a more capable, open-minded, and globally aware individual.";
-
+String essay;
 
 //Array to store all words
-ArrayList<Word> words;
+ArrayList<Word> words = new ArrayList();
 float scrollY = 0;  // Current scroll offset for essay
 float minScrollY = 0;  // Minimum scroll position (top of essay)
 float maxScrollY = 1000;  // Maximum scroll position (bottom of essay)
@@ -47,6 +46,7 @@ Integer firstSelectedWordIndex = null;  // Index of first clicked word (null if 
 String API_KEY;
 WindowStage stage = WindowStage.Home;
 
+
 void setup() {
   createGUI();
   size(1000, 650);
@@ -54,15 +54,7 @@ void setup() {
   // Load API key
   API_KEY = loadStrings("api_key.txt")[0].trim();
   
-  //Puts essay into words (split by spaces to preserve punctuation)
-  words = new ArrayList<Word>();
-  String[] wordStrings = split(essay, ' ');
-  
-  for (int i = 0; i < wordStrings.length; i++) {
-    if (wordStrings[i].length() > 0) {  // Skip empty strings
-      words.add(new Word(wordStrings[i], i));
-    }
-  }
+  PutEssayIntoWords();
   
   layoutWords();
   

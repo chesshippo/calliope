@@ -40,6 +40,14 @@ public void OnTypeInAskAwayField(GTextArea source, GEvent event) { //_CODE_:askA
   println("askAwayField - GTextArea >> GEvent." + event + " @ " + millis());
 } //_CODE_:askAwayField:298145:
 
+public void OnTypedInEssayPathField(GTextField source, GEvent event) { //_CODE_:essayPathField:829266:
+  println("essayPathField - GTextField >> GEvent." + event + " @ " + millis());
+} //_CODE_:essayPathField:829266:
+
+public void OnRefreshEssay(GButton source, GEvent event) { //_CODE_:refreshEssayButton:454847:
+  RefreshEssayText();
+} //_CODE_:refreshEssayButton:454847:
+
 
 
 // Create all the GUI controls. 
@@ -69,6 +77,14 @@ public void createGUI(){
   askAwayField = new GTextArea(controlsWindow, 76, 162, 120, 80, G4P.SCROLLBARS_VERTICAL_ONLY);
   askAwayField.setOpaque(true);
   askAwayField.addEventHandler(this, "OnTypeInAskAwayField");
+  essayPathField = new GTextField(controlsWindow, 6, 503, 288, 51, G4P.SCROLLBARS_HORIZONTAL_ONLY);
+  essayPathField.setPromptText("Paste the filepath to your essay here (text files only)");
+  essayPathField.setOpaque(true);
+  essayPathField.addEventHandler(this, "OnTypedInEssayPathField");
+  refreshEssayButton = new GButton(controlsWindow, 102, 561, 80, 30);
+  refreshEssayButton.setText("Refresh");
+  refreshEssayButton.setLocalColorScheme(GCScheme.RED_SCHEME);
+  refreshEssayButton.addEventHandler(this, "OnRefreshEssay");
   controlsWindow.loop();
 }
 
@@ -80,3 +96,5 @@ GButton backButton;
 GWindow controlsWindow;
 GButton askGeminiBbutton; 
 GTextArea askAwayField; 
+GTextField essayPathField; 
+GButton refreshEssayButton; 
