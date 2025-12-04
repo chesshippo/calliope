@@ -114,13 +114,13 @@ void DrawInfoScreen() {
   text("e.g Informal or formal .", 120, 190);
   textAlign(CENTER);
   textSize(50);
-  text("FEATURES", width/2,250);
-  text("------------------", width/2, 265);
+  text("FEATURES", width/2,350);
+  text("------------------", width/2, 370);
   textSize(23);
-  text("Spell Checker", width/2 , 275);
-  text("Punctuation Checker", width/2, 305);
-  text("Type of Essay", width/2, 335);
-  text("Grammar Checker", width/2 , 365);
+  text("Spell Checker", width/2 , 390);
+  text("Punctuation Checker", width/2, 420);
+  text("Type of Essay", width/2, 450);
+  text("Grammar Checker", width/2 , 480);
   
   backButton.setVisible(true);
   startButton.setVisible(false);
