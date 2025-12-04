@@ -105,18 +105,22 @@ void DrawInfoScreen() {
   textAlign(CENTER);
   textSize(50);
   text("INFO", width/2, 50);
-  text("------------------", width/2, 65);
-  textSize(20);
+  text("-----------", width/2, 65);
+  textSize(23);
   textAlign(CENTER);
-  text("Have you ever wanted to get an A in your English Class. Well don’t worry, calliope’s got you covered.", 425,100);
-  text("calliope has a wide range of features that can assist users in reviewing their essays.",350,130);
-  text("From Spell Checking to punctuation checking and  analyzing what type of essay the user has highlighted  e.g Informal or formal .", 440, 160);
+  text("Have you ever wanted to get an A in your English Class. Well don’t worry, calliope’s got you covered.", 490,100);
+  text("calliope has a wide range of features that can assist users in reviewing their essays.",406,130);
+  text("From Spell Checking to punctuation checking and analyzing what type of essay the user has highlighted.", 505,160);
+  text("e.g Informal or formal .", 120, 190);
   textAlign(CENTER);
   textSize(50);
   text("FEATURES", width/2,250);
   text("------------------", width/2, 265);
-  textSize(15);
+  textSize(23);
   text("Spell Checker", width/2 , 275);
+  text("Punctuation Checker", width/2, 305);
+  text("Type of Essay", width/2, 335);
+  text("Grammar Checker", width/2 , 365);
   
   backButton.setVisible(true);
   startButton.setVisible(false);
