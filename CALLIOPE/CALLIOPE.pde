@@ -87,7 +87,10 @@ void draw()
 
 void DrawHomeScreen()
 {
+  noClip();
+  
   background(0, 0, 50);
+  fill(255);  //Reset fill to white for text
   textAlign(CENTER);
   textSize(100);
   text("CALLIOPE", width / 2, 250);
