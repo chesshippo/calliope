@@ -41,7 +41,10 @@ void mousePressed() {
   //Don't handle clicks in feedback panel
   if (mouseX >= FEEDBACK_PANEL_X && mouseX <= FEEDBACK_PANEL_X + FEEDBACK_PANEL_WIDTH &&
       mouseY >= FEEDBACK_PANEL_Y && mouseY <= FEEDBACK_PANEL_Y + FEEDBACK_PANEL_HEIGHT) {
-    return;  //Ignore clicks in feedback panel
+    //Clicked in feedback panel - unhighlight everything
+    unhighlightAll();
+    firstSelectedWordIndex = null;
+    return;
   }
   
   //Check if clicking on a word
@@ -49,9 +52,9 @@ void mousePressed() {
   
   if (clickedWordIndex != -1) {
     if (firstSelectedWordIndex == null) {
-      // First click - select this word (don't highlight yet, just remember it)
+      // First click - unhighlight any previous selection and select this word as start
+      unhighlightAll();
       firstSelectedWordIndex = clickedWordIndex;
-      //Don't unhighlight on first click - let user see what they're selecting
     } else {
       // Second click - highlight range between first and second word
       int startIndex = min(firstSelectedWordIndex, clickedWordIndex);
@@ -61,7 +64,7 @@ void mousePressed() {
       firstSelectedWordIndex = null;  // Reset for next selection
     }
   } else {
-    //Clicked outside words - reset selection
+    //Clicked outside words - unhighlight everything and reset selection
     unhighlightAll();
     firstSelectedWordIndex = null;
   }

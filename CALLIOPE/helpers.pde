@@ -2,11 +2,22 @@ void EnterEssayEditor()
 {
     startButton.setVisible(false);
     infoButton.setVisible(false);
+    // Make sure back button is visible and enabled
+    backButton.setEnabled(true);
     backButton.setVisible(true);
+    backButton.setOpaque(true);
     controlsWindow.setVisible(true);
     
     //enter editing screen
     stage = WindowStage.EssayHelp;
+    
+    //Highlight the first word when entering the editor
+    if (words.size() > 0) {
+      unhighlightAll();
+      firstSelectedWordIndex = null;
+      words.get(0).isHighlighted = true;
+      words.get(0).backgroundColor = HIGHLIGHT_COLOR;
+    }
 }
 
 void Back()
@@ -15,6 +26,10 @@ void Back()
   infoButton.setVisible(true);
   backButton.setVisible(false);
   controlsWindow.setVisible(false);
+  
+  //Unhighlight all words when going back
+  unhighlightAll();
+  firstSelectedWordIndex = null;
   
   stage = WindowStage.Home;
 }

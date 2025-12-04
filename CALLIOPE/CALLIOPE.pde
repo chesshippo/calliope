@@ -179,6 +179,7 @@ void drawEditingScreen() {
   //The only way this is undone is with push and pop matrix
   //Push matrix saves everything before the clip, and pop matrix restores it back.
   clip(TEXT_POSITION_X, TEXT_POSITION_Y, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT);
+  fill(0);
   
   //Display all words with scroll offset
   for (Word w : words) {
@@ -186,6 +187,10 @@ void drawEditingScreen() {
   }
   
   popMatrix();
+  
+  //Clear any clipping so GUI buttons (like back button) can be drawn properly
+  noClip();
+ 
 }
 
 //Calculate positions for all words
@@ -275,7 +280,12 @@ int getWordAtMousePosition() {
 }
 
 //Highlight a range of words from startIndex to endIndex (inclusive)
+//Only one range can be highlighted at a time - unhighlights previous selection
 void highlightRange(int startIndex, int endIndex) {
+  //First, unhighlight all previous selections
+  unhighlightAll();
+  
+  //Then highlight the new range
   for (int i = startIndex; i <= endIndex && i < words.size(); i++) {
     words.get(i).isHighlighted = true;
     highlighted += words.get(i).wordText + " ";
