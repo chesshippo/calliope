@@ -1,4 +1,4 @@
-void EnterEssayEditor()
+  void EnterEssayEditor()
 {
     startButton.setVisible(false);
     infoButton.setVisible(false);
