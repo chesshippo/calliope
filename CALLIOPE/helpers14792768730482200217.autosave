@@ -1,4 +1,5 @@
 
+
 void SetupSpellcheck()
 {
   String[] dictionaryArray = loadStrings("words_alpha.txt");
