@@ -115,11 +115,44 @@ void SpellCheckEssay()
 {
   for (int i = 0; i < words.size(); i++)
   {
-    if (dictionary.contains(words.get(i).wordText) == false)
+    //set up the word by removing punctuation marks
+    String newWord = "";
+    ArrayList<Character> punctuation = new ArrayList();
+    
+    //add all the punctuation marks
+    punctuation.add(':');
+    punctuation.add('.');
+    punctuation.add('?');
+    punctuation.add(',');
+    punctuation.add('\'');
+    punctuation.add('!');
+    punctuation.add(';');
+    punctuation.add('@');
+    
+    
+    for (int j = 0; j < words.get(i).wordText.length(); j++)
+    {
+      
+      if (!(punctuation.contains(words.get(i).wordText.charAt(j))))
+      {
+        //if it has no punctuation marks, add to new string
+        newWord += words.get(i).wordText.charAt(j);
+        
+        println(words.get(i).wordText.charAt(j));
+      }
+      else
+      {
+        println("skipped punctuation");
+      }
+    }
+    
+    newWord = newWord.toLowerCase();
+    
+    if (!dictionary.contains(newWord))
     {
       words.get(i).isHighlighted = true;
       words.get(i).backgroundColor = color(255, 0, 0);
-      println(words.get(i).wordText);
+      println(newWord, words.get(i).wordText);
     }
   }
 }

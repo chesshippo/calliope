@@ -15,6 +15,8 @@ class Word {
     yPosition = 0;   
     isHighlighted = false;
     backgroundColor = color(255);  //Default white background
+    
+    
   }
   
   //Display the word at its position (adjusted for scrolling)
