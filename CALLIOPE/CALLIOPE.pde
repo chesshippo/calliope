@@ -96,7 +96,7 @@ void DrawHomeScreen()
   backButton.setVisible(false);
 }
 
-void DrawInfoScreen() {
+void DrawInfoScreen() {// Draws info screen 
   int xcircle=10;
   int ycircle=100;
   int r=20;
@@ -108,7 +108,7 @@ void DrawInfoScreen() {
   text("-----------", width/2, 65);
   textSize(23);
   textAlign(CENTER);
-  text("Have you ever wanted to get an A in your English Class. Well don’t worry, calliope’s got you covered.", 490,100);
+  text("Have you ever wanted to get an A in your English Class. Well don’t worry, calliope’s got you covered.", 490,100);// overview 
   text("calliope has a wide range of features that can assist users in reviewing their essays.",406,130);
   text("From Spell Checking to punctuation checking and analyzing what type of essay the user has highlighted.", 505,160);
   text("e.g Informal or formal .", 120, 190);
@@ -117,7 +117,7 @@ void DrawInfoScreen() {
   text("FEATURES", width/2,350);
   text("------------------", width/2, 370);
   textSize(23);
-  text("Spell Checker", width/2 , 390);
+  text("Spell Checker", width/2 , 390);//
   text("Punctuation Checker", width/2, 420);
   text("Type of Essay", width/2, 450);
   text("Grammar Checker", width/2 , 480);
