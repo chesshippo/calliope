@@ -1,6 +1,14 @@
 import pt.tumba.spell.SpellChecker;
 
-
+void SetupSpellcheck()
+{
+  String[] dictionaryArray = loadStrings("words_alpha.txt");
+  
+  for (String s : dictionaryArray)
+  {
+    dictionary.add(s);
+  }
+}
 void EnterEssayEditor()
 {
     startButton.setVisible(false);
@@ -105,13 +113,13 @@ void PutEssayIntoWords()
 
 void SpellCheckEssay()
 {
-  for (Word w : words)
+  for (int i = 0; i < words.size(); i++)
   {
-    SpellChecker checker = new SpellChecker();
-    checker.initialize();
-    
-    String correction = checker.spellCheckWord(w.wordText);
-    
-    println(correction);
+    if (dictionary.contains(words.get(i).wordText) == false)
+    {
+      words.get(i).isHighlighted = true;
+      words.get(i).backgroundColor = color(255, 0, 0);
+      println(words.get(i).wordText);
+    }
   }
 }

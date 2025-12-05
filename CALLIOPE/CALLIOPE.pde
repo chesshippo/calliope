@@ -14,6 +14,7 @@ int SCROLL_SPEED = 5;       //Pixels to scroll per key press
 int UNHIGHLIGHT_BUTTON_SIZE = 30;  //Size of unhighlight button
 color HIGHLIGHT_COLOR = color(173, 216, 230);  //Light blue for highlighting
 
+ArrayList<String> dictionary = new ArrayList();
 //Feedback panel constants
 int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;  //Right side of essay
 int FEEDBACK_PANEL_Y = TEXT_POSITION_Y;  //Same Y as essay
@@ -53,7 +54,7 @@ void setup() {
   
   // Load API key
   API_KEY = loadStrings("api_key.txt")[0].trim();
-  
+  SetupSpellcheck();
   PutEssayIntoWords();
   
   layoutWords();
