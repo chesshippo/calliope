@@ -7,7 +7,6 @@
     backButton.setOpaque(true);
     controlsWindow.setVisible(true);
     
-    //enter editing screen
     stage = WindowStage.EssayHelp;
     
     //Highlight the first word when entering the editor
@@ -52,12 +51,103 @@ void AskGemini()
   println("Highlighted text: " + highlightedText);
   println("User request: " + userRequest);
   
-  //Reset feedback scroll position for new response
   feedbackScrollY = 0;
   
-  //Get feedback from Gemini with full essay context
   geminiResponse = PromptGeminiForFeedback(essay, highlightedText, userRequest);
   
-  //Calculate feedback content height and scroll bounds
   calculateFeedbackScrollBounds();
 }
+<<<<<<< Updated upstream
+=======
+
+void RefreshEssayText()
+{
+  println("refreshing started");
+  String filePath = essayPathField.getText();
+  println(filePath);
+  
+  String[] fullEssay = loadStrings(filePath);
+  printArray(fullEssay);
+  
+  String newEssay = "";
+  
+  for (String essayFragment : fullEssay)
+  {
+    newEssay += " " + essayFragment;
+  }
+  
+  essay = newEssay;
+  PutEssayIntoWords();
+  layoutWords();
+  calculateScrollBounds();
+  redraw();
+}
+
+void PutEssayIntoWords()
+{
+  try
+  {
+    words.clear();
+    String[] wordStrings = split(essay, " ");
+    
+    for (int i = 0; i < wordStrings.length; i++) {
+      if (wordStrings[i].length() > 0) 
+      { 
+        words.add(new Word(wordStrings[i], i));
+      }
+    }
+  }
+  catch (NullPointerException e)
+  {
+    println("Error, double check your text file or replace it altogether");
+  }
+  
+  for (Word w : words)
+  {
+    println(w.wordText);
+  }
+}
+
+void SpellCheckEssay()
+{
+  for (int i = 0; i < words.size(); i++)
+  {
+    String newWord = "";
+    ArrayList<Character> punctuation = new ArrayList();
+    
+    punctuation.add(':');
+    punctuation.add('.');
+    punctuation.add('?');
+    punctuation.add(',');
+    punctuation.add('\'');
+    punctuation.add('!');
+    punctuation.add(';');
+    punctuation.add('@');
+    
+    
+    for (int j = 0; j < words.get(i).wordText.length(); j++)
+    {
+      
+      if (!(punctuation.contains(words.get(i).wordText.charAt(j))))
+      {
+        newWord += words.get(i).wordText.charAt(j);
+        
+        println(words.get(i).wordText.charAt(j));
+      }
+      else
+      {
+        println("skipped punctuation");
+      }
+    }
+    
+    newWord = newWord.toLowerCase();
+    
+    if (!dictionary.contains(newWord))
+    {
+      words.get(i).isHighlighted = true;
+      words.get(i).backgroundColor = color(255, 0, 0);
+      println(newWord, words.get(i).wordText);
+    }
+  }
+}
+>>>>>>> Stashed changes
