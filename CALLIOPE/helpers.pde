@@ -15,7 +15,6 @@ void EnterEssayEditor()
     backButton.setVisible(true);
     controlsWindow.setVisible(true);
     
-    //enter editing screen
     stage = WindowStage.EssayHelp;
 }
 
@@ -48,17 +47,12 @@ void AskGemini()
   println("highlighted text: " + highlightedText);
   println("user request: " + userRequest);
   
-  //Reset feedback scroll position for new response
   feedbackScrollY = 0;
   
-  //Get feedback from Gemini with full essay context
   geminiResponse = PromptGeminiForFeedback(essay, highlightedText, userRequest);
   
-  //Calculate feedback content height and scroll bounds
   calculateFeedbackScrollBounds();
 }
-
-//get the text from the user's text file
 
 void RefreshEssayText()
 {
@@ -68,7 +62,6 @@ void RefreshEssayText()
   
   String[] fullEssay = loadStrings(filePath);
   printArray(fullEssay);
-  //make everything into one line so the program can handle it
   
   String newEssay = "";
   
@@ -86,7 +79,6 @@ void RefreshEssayText()
 
 void PutEssayIntoWords()
 {
-  //Puts essay into words (split by spaces to preserve punctuation)
   try
   {
     words.clear();
@@ -114,11 +106,9 @@ void SpellCheckEssay()
 {
   for (int i = 0; i < words.size(); i++)
   {
-    //set up the word by removing punctuation marks
     String newWord = "";
     ArrayList<Character> punctuation = new ArrayList();
     
-    //add all the punctuation marks
     punctuation.add(':');
     punctuation.add('.');
     punctuation.add('?');
@@ -134,7 +124,6 @@ void SpellCheckEssay()
       
       if (!(punctuation.contains(words.get(i).wordText.charAt(j))))
       {
-        //if it has no punctuation marks, add to new string
         newWord += words.get(i).wordText.charAt(j);
         
         println(words.get(i).wordText.charAt(j));
