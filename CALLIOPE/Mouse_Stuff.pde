@@ -1,6 +1,9 @@
 void mouseWheel(MouseEvent event) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   //Only allow scrolling when in essay editing screen
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   if (stage != WindowStage.EssayHelp) {
@@ -10,7 +13,10 @@ void mouseWheel(MouseEvent event) {
   float scrollAmount = event.getCount() * SCROLL_SPEED;
   
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   //Check if mouse is over feedback panel
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   boolean mouseOverFeedback = (mouseX >= FEEDBACK_PANEL_X && 
@@ -21,7 +27,10 @@ void mouseWheel(MouseEvent event) {
   if (mouseOverFeedback) {
     float newFeedbackScrollY = feedbackScrollY + scrollAmount;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     //Constrain is just a min max
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     feedbackScrollY = constrain(newFeedbackScrollY, minFeedbackScrollY, maxFeedbackScrollY);
@@ -47,7 +56,10 @@ void mousePressed() {
   if (mouseX >= FEEDBACK_PANEL_X && mouseX <= FEEDBACK_PANEL_X + FEEDBACK_PANEL_WIDTH &&
       mouseY >= FEEDBACK_PANEL_Y && mouseY <= FEEDBACK_PANEL_Y + FEEDBACK_PANEL_HEIGHT) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     //Clicked in feedback panel, unhighlight everything
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     unhighlightAll();
@@ -60,11 +72,19 @@ void mousePressed() {
   if (clickedWordIndex != -1) {
     if (firstSelectedWordIndex == null) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       // First click, unhighlight any previous selection and select this word as start
       unhighlightAll();
       firstSelectedWordIndex = clickedWordIndex;
     } else {
       // Second click, highlight range between first and second word
+=======
+      firstSelectedWordIndex = clickedWordIndex;
+    } else if (firstSelectedWordIndex == clickedWordIndex) {
+      unhighlightAll();
+      firstSelectedWordIndex = null;
+    } else {
+>>>>>>> Stashed changes
 =======
       firstSelectedWordIndex = clickedWordIndex;
     } else if (firstSelectedWordIndex == clickedWordIndex) {
@@ -80,7 +100,10 @@ void mousePressed() {
     }
   } else {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     //Clicked outside words, unhighlight everything and reset selection
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     unhighlightAll();

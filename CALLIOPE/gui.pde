@@ -25,7 +25,10 @@ public void OnTypeInAskAwayField(GTextArea source, GEvent event) {
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 public void OnTypedInEssayPathField(GTextField source, GEvent event) {
   println("essayPathField - GTextField >> GEvent." + event + " @ " + millis());
 }
@@ -37,10 +40,16 @@ public void OnRefreshEssay(GButton source, GEvent event) {
 public void OnSpellcheckButtonClicked(GButton source, GEvent event) {
   SpellCheckEssay();
 }
+<<<<<<< Updated upstream
 
 >>>>>>> Stashed changes
 
 
+=======
+
+
+
+>>>>>>> Stashed changes
 public void createGUI(){
   G4P.messagesEnabled(false);
   G4P.setGlobalColorScheme(GCScheme.BLUE_SCHEME);

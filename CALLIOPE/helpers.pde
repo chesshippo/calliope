@@ -58,7 +58,10 @@ void AskGemini()
   calculateFeedbackScrollBounds();
 }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 
 void RefreshEssayText()
 {

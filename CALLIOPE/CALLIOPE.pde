@@ -14,6 +14,7 @@ int UNHIGHLIGHT_BUTTON_SIZE = 30;
 color HIGHLIGHT_COLOR = color(173, 216, 230);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 //Feedback panel constants
 int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;  //Right side of essay
 int FEEDBACK_PANEL_Y = TEXT_POSITION_Y;  //Same Y as essay
@@ -21,17 +22,23 @@ int FEEDBACK_PANEL_WIDTH = CANVAS_WIDTH - FEEDBACK_PANEL_X - TEXT_POSITION_X;  /
 int FEEDBACK_PANEL_HEIGHT = TEXT_AREA_HEIGHT;  //Same height as essay
 int FEEDBACK_MARGIN = 15;  //Margin inside feedback panel
 =======
+=======
+>>>>>>> Stashed changes
 ArrayList<String> dictionary = new ArrayList();
 int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;
 int FEEDBACK_PANEL_Y = TEXT_POSITION_Y;
 int FEEDBACK_PANEL_WIDTH = CANVAS_WIDTH - FEEDBACK_PANEL_X - TEXT_POSITION_X;
 int FEEDBACK_PANEL_HEIGHT = TEXT_AREA_HEIGHT;
 int FEEDBACK_MARGIN = 15;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 String highlighted = "";
 String geminiResponse = "";
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 //Text content
 String essay = "In an increasingly interconnected world, the ability to communicate across cultures is more valuable than ever. One of the most effective ways to build this skill is by learning a second language. While some people view language study as just another school requirement, it actually offers far-reaching advantages that extend beyond the classroom. Learning a second language improves cognitive abilities, expands career opportunities, and deepens cultural understanding, making it a valuable investment in one’s personal and professional future. To begin with, learning a second language strengthens the brain. Research has shown that bilingual individuals often have better memory, problem-solving skills, and mental flexibility than monolingual speakers. When students switch between languages, they train their brains to focus, ignore distractions, and process information more efficiently. This constant mental exercise can even delay age-related cognitive decline later in life. In other words, studying another language is not only about vocabulary and grammar; it is also a workout for the mind that can improve overall academic performance and long-term brain health. In addition to cognitive benefits, being bilingual creates valuable career opportunities. In today’s globalized economy, many companies work with international clients and partners, making employees who speak multiple languages especially attractive. A job candidate who can communicate in more than one language may be able to negotiate deals, assist customers, or collaborate with colleagues in ways that others cannot. This skill can lead to higher salaries, more travel, and a wider range of job options in fields such as business, tourism, translation, diplomacy, and education. Thus, learning a second language is not just an academic achievement; it is a practical tool that can make a candidate stand out in a competitive job market. Moreover, learning another language helps individuals develop a deeper appreciation for other cultures. Language and culture are closely linked, and studying a language often involves learning about the traditions, values, and history of the people who speak it. This exposure can reduce stereotypes and encourage empathy by showing that there are many valid ways of living and thinking. For example, understanding cultural customs—such as greeting styles, holidays, or table manners—can make communication more respectful and meaningful. In a world where misunderstandings can quickly lead to conflict, the ability to see issues from multiple cultural perspectives is an important skill for building tolerance and cooperation. Of course, learning a second language can be challenging. It requires time, patience, and consistent practice. Some people may worry that they will never sound like a native speaker or that they will make embarrassing mistakes. However, these challenges are also opportunities for growth. Making mistakes is a natural part of the learning process, and each error helps learners understand the language more deeply. With modern resources—such as language apps, online courses, and conversation partners—it is easier than ever to practice regularly and improve steadily. In conclusion, the benefits of learning a second language are substantial and long-lasting. It sharpens the mind, opens doors to diverse career paths, and fosters greater cultural understanding. Although the process can be demanding, the rewards far outweigh the difficulties. In a world where communication and cooperation are essential, learning another language is not just an academic task but a powerful step toward becoming a more capable, open-minded, and globally aware individual.";
@@ -56,6 +63,20 @@ float minFeedbackScrollY = 0;
 float maxFeedbackScrollY = 0;
 float feedbackContentHeight = 0;
 
+=======
+String essay;
+
+ArrayList<Word> words = new ArrayList();
+float scrollY = 0;
+float minScrollY = 0;
+float maxScrollY = 1000;
+
+float feedbackScrollY = 0;
+float minFeedbackScrollY = 0;
+float maxFeedbackScrollY = 0;
+float feedbackContentHeight = 0;
+
+>>>>>>> Stashed changes
 Integer firstSelectedWordIndex = null;
 String API_KEY;
 WindowStage stage = WindowStage.Home;
@@ -186,9 +207,13 @@ void drawEditingScreen() {
   popMatrix();
   
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   //Clear any clipping so GUI buttons (like back button) can be drawn properly
   noClip();
  
+=======
+  noClip();
+>>>>>>> Stashed changes
 =======
   noClip();
 >>>>>>> Stashed changes
@@ -267,6 +292,7 @@ int getWordAtMousePosition() {
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 //Highlight a range of words from startIndex to endIndex (inclusive)
 //Only one range can be highlighted at a time - unhighlights previous selection
 void highlightRange(int startIndex, int endIndex) {
@@ -274,6 +300,10 @@ void highlightRange(int startIndex, int endIndex) {
   unhighlightAll();
   
   //Then highlight the new range
+=======
+void highlightRange(int startIndex, int endIndex) {
+  unhighlightAll();
+>>>>>>> Stashed changes
 =======
 void highlightRange(int startIndex, int endIndex) {
   unhighlightAll();

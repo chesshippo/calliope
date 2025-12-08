@@ -15,8 +15,11 @@ class Word {
     yPosition = 0;   
     isHighlighted = false;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     backgroundColor = color(255);  //Default white background
 =======
+=======
+>>>>>>> Stashed changes
     backgroundColor = color(255);
     
     
