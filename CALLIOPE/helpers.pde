@@ -7,6 +7,7 @@
     backButton.setOpaque(true);
     controlsWindow.setVisible(true);
     
+    //enter editing screen
     stage = WindowStage.EssayHelp;
     
     //Highlight the first word when entering the editor
@@ -51,12 +52,16 @@ void AskGemini()
   println("Highlighted text: " + highlightedText);
   println("User request: " + userRequest);
   
+  //Reset feedback scroll position for new response
   feedbackScrollY = 0;
   
+  //Get feedback from Gemini with full essay context
   geminiResponse = PromptGeminiForFeedback(essay, highlightedText, userRequest);
   
+  //Calculate feedback content height and scroll bounds
   calculateFeedbackScrollBounds();
 }
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 =======
@@ -154,3 +159,5 @@ void SpellCheckEssay()
   }
 }
 >>>>>>> Stashed changes
+=======
+>>>>>>> parent of 011f3b1 (SpellCheck+New)
