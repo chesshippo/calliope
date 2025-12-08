@@ -2,6 +2,7 @@
 {
     startButton.setVisible(false);
     infoButton.setVisible(false);
+    // Make sure back button is visible and enabled
     backButton.setEnabled(true);
     backButton.setVisible(true);
     backButton.setOpaque(true);
