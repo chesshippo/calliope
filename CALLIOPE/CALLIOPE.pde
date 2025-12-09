@@ -1,17 +1,17 @@
 import g4p_controls.*;
 
-int CANVAS_WIDTH = 1000;
-int CANVAS_HEIGHT = 650;
-int TEXT_POSITION_X = 50;
-int TEXT_POSITION_Y = 100;
-int TEXT_AREA_WIDTH = 600;
-int TEXT_AREA_HEIGHT = 400;
-int TEXT_MARGIN = 20;
-int LINE_HEIGHT = 30;
-int WORD_SPACING = 10;
-int SCROLL_SPEED = 5;
-int UNHIGHLIGHT_BUTTON_SIZE = 30;
-color HIGHLIGHT_COLOR = color(173, 216, 230);
+final int CANVAS_WIDTH = 1000;
+final int CANVAS_HEIGHT = 650;
+final int TEXT_POSITION_X = 50;
+final int TEXT_POSITION_Y = 100;
+final int TEXT_AREA_WIDTH = 600;
+final int TEXT_AREA_HEIGHT = 400;
+final int TEXT_MARGIN = 20;
+final int LINE_HEIGHT = 30;
+final int WORD_SPACING = 10;
+final int SCROLL_SPEED = 5;
+final int UNHIGHLIGHT_BUTTON_SIZE = 30;
+final color HIGHLIGHT_COLOR = color(173, 216, 250, 100);
 
 ArrayList<String> dictionary = new ArrayList();
 int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;
@@ -229,19 +229,20 @@ int getWordAtMousePosition() {
 }
 
 void highlightRange(int startIndex, int endIndex) {
-  unhighlightAll();
+  unhighlightUser();
   for (int i = startIndex; i <= endIndex && i < words.size(); i++) {
     words.get(i).isHighlighted = true;
     highlighted += words.get(i).wordText + " ";
-    words.get(i).backgroundColor = HIGHLIGHT_COLOR;
   }
 }
 
-void unhighlightAll() {
+void unhighlightUser() {
   highlighted = "";
   for (Word w : words) {
-    w.isHighlighted = false;
-    w.backgroundColor = color(255);
+    if (w.isHighlighted)
+    {
+      w.isHighlighted = false;
+    }
   }
 }
 

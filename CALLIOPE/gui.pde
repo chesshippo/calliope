@@ -5,11 +5,11 @@
  * designer and care should be taken when editing this file.
  * Only add/edit code inside the event handlers i.e. only
  * use lines between the matching comment tags. e.g.
- *
- * void myBtnEvents(GButton button) { //_CODE_:button1:12356:
- *     // It is safe to enter your event code here  
- * } //_CODE_:button1:12356:
- * 
+
+ void myBtnEvents(GButton button) { //_CODE_:button1:12356:
+     // It is safe to enter your event code here  
+ } //_CODE_:button1:12356:
+ 
  * Do not rename this tab!
  * =========================================================
  */
@@ -52,6 +52,10 @@ public void OnSpellcheckButtonClicked(GButton source, GEvent event) { //_CODE_:s
   SpellCheckEssay();
 } //_CODE_:spellcheckButton:443578:
 
+public void OnUnhighlightButtonClicked(GButton source, GEvent event) { //_CODE_:unhighlightButton:267502:
+  unhighlightAll();
+} //_CODE_:unhighlightButton:267502:
+
 
 
 // Create all the GUI controls. 
@@ -89,10 +93,14 @@ public void createGUI(){
   refreshEssayButton.setText("Refresh");
   refreshEssayButton.setLocalColorScheme(GCScheme.RED_SCHEME);
   refreshEssayButton.addEventHandler(this, "OnRefreshEssay");
-  spellcheckButton = new GButton(controlsWindow, 28, 52, 80, 30);
+  spellcheckButton = new GButton(controlsWindow, 100, 50, 80, 30);
   spellcheckButton.setText("Spellcheck");
   spellcheckButton.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   spellcheckButton.addEventHandler(this, "OnSpellcheckButtonClicked");
+  unhighlightButton = new GButton(controlsWindow, 100, 90, 80, 30);
+  unhighlightButton.setText("Dismiss highlighting");
+  unhighlightButton.setLocalColorScheme(GCScheme.ORANGE_SCHEME);
+  unhighlightButton.addEventHandler(this, "OnUnhighlightButtonClicked");
   controlsWindow.loop();
 }
 
@@ -107,3 +115,4 @@ GTextArea askAwayField;
 GTextField essayPathField; 
 GButton refreshEssayButton; 
 GButton spellcheckButton; 
+GButton unhighlightButton; 

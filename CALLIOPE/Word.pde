@@ -5,7 +5,9 @@ class Word {
   float xPosition;
   float yPosition;
   boolean isHighlighted;
-  color backgroundColor;
+  final color userHighlightColour;
+  color programHighlightColour;
+  boolean isProgramHighlighted;
   
   Word(String text, int pos) {
     wordText = text;
@@ -14,7 +16,7 @@ class Word {
     xPosition = 0; 
     yPosition = 0;   
     isHighlighted = false;
-    backgroundColor = color(255);
+    userHighlightColour = HIGHLIGHT_COLOR;
     
     
   }
@@ -22,12 +24,22 @@ class Word {
   void display(float scrollOffset) {
     float adjustedY = yPosition + scrollOffset;
     
-    if (isHighlighted) {
+    if (isProgramHighlighted) {
       textSize(16);
       float wordWidth = textWidth(wordText);
       float wordHeight = LINE_HEIGHT;
       
-      fill(backgroundColor);
+      fill(programHighlightColour);
+      noStroke();
+      rect(xPosition, adjustedY - wordHeight + 5, wordWidth, wordHeight);
+    }
+    if (isHighlighted)
+    {
+      textSize(16);
+      float wordWidth = textWidth(wordText);
+      float wordHeight = LINE_HEIGHT;
+      
+      fill(userHighlightColour);
       noStroke();
       rect(xPosition, adjustedY - wordHeight + 5, wordWidth, wordHeight);
     }
