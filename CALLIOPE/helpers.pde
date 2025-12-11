@@ -1,14 +1,14 @@
 
 void SetupSpellcheck()
 {
-  String[] dictionaryArray = loadStrings("words.txt");
+  //String[] dictionaryArray = loadStrings("words.txt");
 
-  for (String s : dictionaryArray)
-  {
-    dictionary.add(s);
-  }
+  //for (String s : dictionaryArray)
+  //{
+  //  dictionary.add(s);
+  //}
   
-  dictionaryArray = loadStrings("words_alpha.txt");
+  String[] dictionaryArray = loadStrings("words_alpha.txt");
   
   for (String s : dictionaryArray)
   {
@@ -138,6 +138,22 @@ void SpellCheckEssay()
     punctuation.add('\\');
     punctuation.add('/');
     punctuation.add('’');
+    punctuation.add('\'');
+    punctuation.add('“');
+    punctuation.add('”');
+    punctuation.add('0');
+    punctuation.add('1');
+    punctuation.add('2');
+    punctuation.add('3');
+    punctuation.add('4');
+    punctuation.add('5');
+    punctuation.add('6');
+    punctuation.add('7');
+    punctuation.add('8');
+    punctuation.add('9');
+    
+    
+    
 
 
     for (int j = 0; j < words.get(i).wordText.length(); j++)
@@ -151,11 +167,7 @@ void SpellCheckEssay()
         {
           println("apostrophe");
         }
-        //println(words.get(i).wordText.charAt(j));
-      } else
-      {
-        println("skipped punctuation");
-      }
+      } 
     }
 
     newWord = newWord.toLowerCase();

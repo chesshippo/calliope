@@ -15,7 +15,7 @@
  */
 
 public void OnInfoClicked(GButton source, GEvent event) { //_CODE_:infoButton:464716:
-  println("infoButton - GButton >> GEvent." + event + " @ " + millis());
+  stage = WindowStage.Info;
 } //_CODE_:infoButton:464716:
 
 public void OnStartClicked(GButton source, GEvent event) { //_CODE_:startButton:936311:

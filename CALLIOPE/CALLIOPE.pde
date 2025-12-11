@@ -67,6 +67,10 @@ void draw()
   {
     DrawHomeScreen();
   }
+  else if (stage == WindowStage.Info)
+  {
+    DrawInfoScreen();
+  }
 }
 
 void DrawHomeScreen()
@@ -74,7 +78,19 @@ void DrawHomeScreen()
   background(0, 0, 50);
   textAlign(CENTER);
   textSize(100);
+  fill(255);
   text("CALLIOPE", width / 2, 250);
+}
+
+void DrawInfoScreen()
+{
+  backButton.setVisible(true);
+  startButton.setVisible(false);
+  infoButton.setVisible(false);
+  
+  background(0, 0, 50);
+  
+  
 }
 
 void drawEditingScreen() {
@@ -91,7 +107,7 @@ void drawEditingScreen() {
   fill(50);
   textSize(18);
   textAlign(LEFT, TOP);
-  text("Gemini Feedback", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
+  text("Calliope Feedback", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
   
   if (geminiResponse.length() > 0) {
     pushMatrix();
