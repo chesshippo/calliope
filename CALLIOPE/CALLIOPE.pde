@@ -1,40 +1,54 @@
 import g4p_controls.*;
 
-final int CANVAS_WIDTH = 1000;
-final int CANVAS_HEIGHT = 650;
-final int TEXT_POSITION_X = 50;
-final int TEXT_POSITION_Y = 100;
-final int TEXT_AREA_WIDTH = 600;
-final int TEXT_AREA_HEIGHT = 400;
-final int TEXT_MARGIN = 20;
-final int LINE_HEIGHT = 30;
-final int WORD_SPACING = 10;
-final int SCROLL_SPEED = 5;
-final int UNHIGHLIGHT_BUTTON_SIZE = 30;
-final color HIGHLIGHT_COLOR = color(173, 216, 250, 100);
-final color YELLOW_HIGHLIGHT = color(255, 255, 0);
-final color GREEN_HIGHLIGHT = color(0, 255, 0);
+//Any variables in CONSTANT_CASE are Paramaters/Constant.
+int CANVAS_WIDTH = 1000;
+int CANVAS_HEIGHT = 650;
+int TEXT_POSITION_X = 50;
+int TEXT_POSITION_Y = 100;
+int TEXT_AREA_WIDTH = 600;
+int TEXT_AREA_HEIGHT = 400;
+int TEXT_MARGIN = 20;
+int LINE_HEIGHT = 30;
+int WORD_SPACING = 10;
+int SCROLL_SPEED = 5;
+int UNHIGHLIGHT_BUTTON_SIZE = 30;
+
+color HIGHLIGHT_COLOR = color(173, 216, 250, 100);
+color YELLOW_HIGHLIGHT = color(255, 255, 0);
+color GREEN_HIGHLIGHT = color(0, 255, 0);
+
+//The Array dictionary is the list of words that are in the english dictionary.
+//It can be used for spellcheck.
 
 ArrayList<String> dictionary = new ArrayList();
+
 int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;
 int FEEDBACK_PANEL_Y = TEXT_POSITION_Y;
 int FEEDBACK_PANEL_WIDTH = CANVAS_WIDTH - FEEDBACK_PANEL_X - TEXT_POSITION_X;
 int FEEDBACK_PANEL_HEIGHT = TEXT_AREA_HEIGHT;
 int FEEDBACK_MARGIN = 15;
 
+//The string highlighted is used to turn the user's highlighted text into a string
 String highlighted = "";
+
 String geminiResponse = "";
 
+//essay is the variable that the user's essay is loaded on to.
 String essay;
 
+//Each word in the essay is contained in an array "words" as a Word class.
 ArrayList<Word> words = new ArrayList();
+
+//scrollY tells us how much the user has scrolled up and down on the essay presentation screen.
 float scrollY = 0;
+
+//The maximum is a placeholders until we calculate how long the essay is.
 float minScrollY = 0;
 float maxScrollY = 1000;
 
+//The feedback panel also has some scroll, so the same process occurs their.
 float feedbackScrollY = 0;
 float minFeedbackScrollY = 0;
-float maxFeedbackScrollY = 0;
 float feedbackContentHeight = 0;
 
 Integer firstSelectedWordIndex = null;

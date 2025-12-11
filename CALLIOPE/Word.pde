@@ -5,7 +5,7 @@ class Word {
   float xPosition;
   float yPosition;
   boolean isHighlighted;
-  final color userHighlightColour;
+  color userHighlightColour;
   color programHighlightColour;
   boolean isProgramHighlighted;
   
