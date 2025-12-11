@@ -15,7 +15,7 @@
  */
 
 public void OnInfoClicked(GButton source, GEvent event) { //_CODE_:infoButton:464716:
-  stage = WindowStage.Info;
+  EnterInfoScreen();
 } //_CODE_:infoButton:464716:
 
 public void OnStartClicked(GButton source, GEvent event) { //_CODE_:startButton:936311:
@@ -27,6 +27,10 @@ public void OnStartClicked(GButton source, GEvent event) { //_CODE_:startButton:
 public void OnBackClicked(GButton source, GEvent event) { //_CODE_:backButton:373704:
   Back();
 } //_CODE_:backButton:373704:
+
+public void OnManualDownloadButtonClicked(GButton source, GEvent event) { //_CODE_:manualDownloadButton:903249:
+  DownloadUserManual();
+} //_CODE_:manualDownloadButton:903249:
 
 synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:controlsWindow:814485:
   appc.background(230);
@@ -75,6 +79,14 @@ public void createGUI(){
   backButton.setText("Back");
   backButton.setLocalColorScheme(GCScheme.RED_SCHEME);
   backButton.addEventHandler(this, "OnBackClicked");
+  manualDownloadButton = new GButton(this, 668, 326, 80, 30);
+  manualDownloadButton.setText("Download Manual");
+  manualDownloadButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  manualDownloadButton.addEventHandler(this, "OnManualDownloadButtonClicked");
+  downloadLabel = new GLabel(this, 754, 323, 206, 39);
+  downloadLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  downloadLabel.setLocalColorScheme(GCScheme.RED_SCHEME);
+  downloadLabel.setOpaque(false);
   controlsWindow = GWindow.getWindow(this, "Calliope Controls", 0, 0, 300, 600, JAVA2D);
   controlsWindow.noLoop();
   controlsWindow.setActionOnClose(G4P.KEEP_OPEN);
@@ -109,6 +121,8 @@ public void createGUI(){
 GButton infoButton; 
 GButton startButton; 
 GButton backButton; 
+GButton manualDownloadButton; 
+GLabel downloadLabel; 
 GWindow controlsWindow;
 GButton askGeminiBbutton; 
 GTextArea askAwayField; 

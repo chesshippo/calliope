@@ -1,3 +1,8 @@
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.IOException;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 void SetupSpellcheck()
 {
@@ -8,12 +13,36 @@ void SetupSpellcheck()
     dictionary.add(s);
   }
 }
+
+void DownloadUserManual()
+{
+  //if the user needs more on how to use the program, they can easily download the user manual.
+  
+  String home = System.getProperty("user.home"); //find home directory and then attatch downloads to get to downloads folder
+  String downloads = home + "\\Downloads\\";
+  
+  Path manual = Paths.get("data/manual.txt");
+  Path destination = Paths.get(downloads + "manual.txt");
+  
+  try
+  {
+    Files.copy(manual, destination, REPLACE_EXISTING);
+    downloadLabel.setText("Success! Check your downloads folder");
+  }
+  catch (Exception e)
+  {
+    downloadLabel.setText("Something went wrong.");
+  }
+}
+
 void EnterEssayEditor()
 {
   startButton.setVisible(false);
   infoButton.setVisible(false);
   backButton.setVisible(true);
   controlsWindow.setVisible(true);
+  downloadLabel.setVisible(false);
+  manualDownloadButton.setVisible(false);
 
   stage = WindowStage.EssayHelp;
 }
@@ -24,8 +53,21 @@ void Back()
   infoButton.setVisible(true);
   backButton.setVisible(false);
   controlsWindow.setVisible(false);
+  manualDownloadButton.setVisible(false);
+  downloadLabel.setVisible(false);
 
   stage = WindowStage.Home;
+}
+
+void EnterInfoScreen()
+{
+  backButton.setVisible(true);
+  startButton.setVisible(false);
+  infoButton.setVisible(false);
+  manualDownloadButton.setVisible(true);
+  downloadLabel.setVisible(true);
+  
+  stage = WindowStage.Info;
 }
 
 void AskGemini()

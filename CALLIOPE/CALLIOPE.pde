@@ -57,6 +57,11 @@ void setup() {
   
   controlsWindow.setVisible(false);
   backButton.setVisible(false);
+  backButton.setVisible(false);
+  startButton.setVisible(true);
+  infoButton.setVisible(true);
+  manualDownloadButton.setVisible(false);
+  downloadLabel.setVisible(false);
 }
 
 void draw()
@@ -86,11 +91,27 @@ void DrawHomeScreen()
 
 void DrawInfoScreen()
 {
-  backButton.setVisible(true);
-  startButton.setVisible(false);
-  infoButton.setVisible(false);
   
   background(0, 0, 50);
+  
+  //info screen
+  textAlign(CENTER);
+  
+  textSize(60);
+  text("INFO", 500, 100);
+  
+  textSize(20);
+  text("Welcome to Calliope, the all in one essay helper!", 500, 200);
+  text("To get started, click start and\nenter the filepath to your essay\nin the controls window, and hit refresh", 500, 250);
+  text("For more details, see the user manual:", 500, 350);
+  textSize(30);
+  text("IMPORTANT NOTES:", 500, 400);
+  
+  textSize(20);
+  text("- Do not spam buttons, as it can cause crashes", 500, 450);
+  text("- Only text files may be used to load essays into the program", 500, 480);
+  text("- Calliope can make mistakes. Double check important information.", 500, 510);
+  
   
   
 }
@@ -152,7 +173,7 @@ void drawEditingScreen() {
     fill(150);
     textSize(12);
     textAlign(LEFT, TOP);
-    text("Highlight text and ask Gemini\nfor feedback...", 
+    text("Highlight text and ask Calliope\nfor feedback...", 
          FEEDBACK_PANEL_X + FEEDBACK_MARGIN, 
          FEEDBACK_PANEL_Y + FEEDBACK_MARGIN + 30);
   }
