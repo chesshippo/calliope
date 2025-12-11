@@ -1,6 +1,13 @@
 
 void SetupSpellcheck()
 {
+  //String[] dictionaryArray = loadStrings("words.txt");
+
+  //for (String s : dictionaryArray)
+  //{
+  //  dictionary.add(s);
+  //}
+  
   String[] dictionaryArray = loadStrings("words_alpha.txt");
   
   for (String s : dictionaryArray)
@@ -10,12 +17,12 @@ void SetupSpellcheck()
 }
 void EnterEssayEditor()
 {
-    startButton.setVisible(false);
-    infoButton.setVisible(false);
-    backButton.setVisible(true);
-    controlsWindow.setVisible(true);
-    
-    stage = WindowStage.EssayHelp;
+  startButton.setVisible(false);
+  infoButton.setVisible(false);
+  backButton.setVisible(true);
+  controlsWindow.setVisible(true);
+
+  stage = WindowStage.EssayHelp;
 }
 
 void Back()
@@ -24,7 +31,7 @@ void Back()
   infoButton.setVisible(true);
   backButton.setVisible(false);
   controlsWindow.setVisible(false);
-  
+
   stage = WindowStage.Home;
 }
 
@@ -32,44 +39,49 @@ void AskGemini()
 {
   String userRequest = askAwayField.getText().trim();
   String highlightedText = getHighlightedText();
-  
+
   if (highlightedText.length() == 0) {
     geminiResponse = "Please highlight some text first before asking for feedback.";
     return;
   }
-  
+
   if (userRequest.length() == 0) {
     geminiResponse = "Please enter a question or request in the text field.";
     return;
   }
-  
+
   println("request received");
   println("highlighted text: " + highlightedText);
   println("user request: " + userRequest);
-  
+
   feedbackScrollY = 0;
-  
+
   geminiResponse = PromptGeminiForFeedback(essay, highlightedText, userRequest);
-  
+
   calculateFeedbackScrollBounds();
 }
 
 void RefreshEssayText()
 {
-  println("refreshing started");
   String filePath = essayPathField.getText();
+
+  if (filePath.contains("\""))
+  {
+    filePath = filePath.substring(1, filePath.length() - 1);
+  }
+
   println(filePath);
-  
+
   String[] fullEssay = loadStrings(filePath);
   printArray(fullEssay);
-  
+
   String newEssay = "";
-  
+
   for (String essayFragment : fullEssay)
   {
     newEssay += " " + essayFragment;
   }
-  
+
   essay = newEssay;
   PutEssayIntoWords();
   layoutWords();
@@ -83,10 +95,10 @@ void PutEssayIntoWords()
   {
     words.clear();
     String[] wordStrings = split(essay, " ");
-    
+
     for (int i = 0; i < wordStrings.length; i++) {
-      if (wordStrings[i].length() > 0) 
-      { 
+      if (wordStrings[i].length() > 0)
+      {
         words.add(new Word(wordStrings[i], i));
       }
     }
@@ -95,7 +107,7 @@ void PutEssayIntoWords()
   {
     println("Error, double check your text file or replace it altogether");
   }
-  
+
   for (Word w : words)
   {
     println(w.wordText);
@@ -108,8 +120,14 @@ void SpellCheckEssay()
   {
     String newWord = "";
     ArrayList<Character> punctuation = new ArrayList();
-    
+
+  //characters to skip so it doesnt confuse spellcheck
     punctuation.add(':');
+    punctuation.add('\"');
+    punctuation.add('[');
+    punctuation.add(']');
+    punctuation.add('(');
+    punctuation.add(')');
     punctuation.add('.');
     punctuation.add('?');
     punctuation.add(',');
@@ -117,30 +135,57 @@ void SpellCheckEssay()
     punctuation.add('!');
     punctuation.add(';');
     punctuation.add('@');
+    punctuation.add('\\');
+    punctuation.add('/');
+    punctuation.add('’');
+    punctuation.add('\'');
+    punctuation.add('“');
+    punctuation.add('”');
+    punctuation.add('0');
+    punctuation.add('1');
+    punctuation.add('2');
+    punctuation.add('3');
+    punctuation.add('4');
+    punctuation.add('5');
+    punctuation.add('6');
+    punctuation.add('7');
+    punctuation.add('8');
+    punctuation.add('9');
     
     
+    
+
+
     for (int j = 0; j < words.get(i).wordText.length(); j++)
     {
-      
+
       if (!(punctuation.contains(words.get(i).wordText.charAt(j))))
       {
         newWord += words.get(i).wordText.charAt(j);
-        
-        println(words.get(i).wordText.charAt(j));
-      }
-      else
-      {
-        println("skipped punctuation");
-      }
+
+        if (words.get(i).wordText.charAt(j) == '\'')
+        {
+          println("apostrophe");
+        }
+      } 
     }
-    
+
     newWord = newWord.toLowerCase();
-    
+
     if (!dictionary.contains(newWord))
     {
-      words.get(i).isHighlighted = true;
-      words.get(i).backgroundColor = color(255, 0, 0);
+      words.get(i).isProgramHighlighted = true;
+      words.get(i).programHighlightColour = color(255, 0, 0);
       println(newWord, words.get(i).wordText);
     }
+  }
+}
+
+void unhighlightAll()
+{
+  for (Word w : words)
+  {
+    w.isHighlighted = false;
+    w.isProgramHighlighted = false;
   }
 }

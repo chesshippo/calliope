@@ -27,14 +27,14 @@ void mousePressed() {
   
   if (mouseX >= 0 && mouseX <= UNHIGHLIGHT_BUTTON_SIZE &&
       mouseY >= 0 && mouseY <= UNHIGHLIGHT_BUTTON_SIZE) {
-    unhighlightAll();
+    unhighlightUser();
     firstSelectedWordIndex = null;
     return;
   }
   
   if (mouseX >= FEEDBACK_PANEL_X && mouseX <= FEEDBACK_PANEL_X + FEEDBACK_PANEL_WIDTH &&
       mouseY >= FEEDBACK_PANEL_Y && mouseY <= FEEDBACK_PANEL_Y + FEEDBACK_PANEL_HEIGHT) {
-    unhighlightAll();
+    unhighlightUser();
     firstSelectedWordIndex = null;
     return;
   }
@@ -45,7 +45,7 @@ void mousePressed() {
     if (firstSelectedWordIndex == null) {
       firstSelectedWordIndex = clickedWordIndex;
     } else if (firstSelectedWordIndex == clickedWordIndex) {
-      unhighlightAll();
+      unhighlightUser();
       firstSelectedWordIndex = null;
     } else {
       int startIndex = min(firstSelectedWordIndex, clickedWordIndex);
@@ -55,7 +55,7 @@ void mousePressed() {
       firstSelectedWordIndex = null;
     }
   } else {
-    unhighlightAll();
+    unhighlightUser();
     firstSelectedWordIndex = null;
   }
 }
