@@ -1,19 +1,17 @@
 import g4p_controls.*;
 
-int CANVAS_WIDTH = 1000;
-int CANVAS_HEIGHT = 650;
-int TEXT_POSITION_X = 50;
-int TEXT_POSITION_Y = 100;
-int TEXT_AREA_WIDTH = 600;
-int TEXT_AREA_HEIGHT = 400;
-int TEXT_MARGIN = 20;
-int LINE_HEIGHT = 30;
-int WORD_SPACING = 10;
-int SCROLL_SPEED = 5;
-int UNHIGHLIGHT_BUTTON_SIZE = 30;
-color HIGHLIGHT_COLOR = color(173, 216, 230);
-color YELLOW_HIGHLIGHT = color(255, 255, 0);
-color GREEN_HIGHLIGHT = color(0, 255, 0);
+final int CANVAS_WIDTH = 1000;
+final int CANVAS_HEIGHT = 650;
+final int TEXT_POSITION_X = 50;
+final int TEXT_POSITION_Y = 100;
+final int TEXT_AREA_WIDTH = 600;
+final int TEXT_AREA_HEIGHT = 400;
+final int TEXT_MARGIN = 20;
+final int LINE_HEIGHT = 30;
+final int WORD_SPACING = 10;
+final int SCROLL_SPEED = 5;
+final int UNHIGHLIGHT_BUTTON_SIZE = 30;
+final color HIGHLIGHT_COLOR = color(173, 216, 250, 100);
 
 ArrayList<String> dictionary = new ArrayList();
 int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;
@@ -69,6 +67,10 @@ void draw()
   {
     DrawHomeScreen();
   }
+  else if (stage == WindowStage.Info)
+  {
+    DrawInfoScreen();
+  }
 }
 
 void DrawHomeScreen()
@@ -76,7 +78,19 @@ void DrawHomeScreen()
   background(0, 0, 50);
   textAlign(CENTER);
   textSize(100);
+  fill(255);
   text("CALLIOPE", width / 2, 250);
+}
+
+void DrawInfoScreen()
+{
+  backButton.setVisible(true);
+  startButton.setVisible(false);
+  infoButton.setVisible(false);
+  
+  background(0, 0, 50);
+  
+  
 }
 
 void drawEditingScreen() {
@@ -93,7 +107,7 @@ void drawEditingScreen() {
   fill(50);
   textSize(18);
   textAlign(LEFT, TOP);
-  text("Gemini Feedback", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
+  text("Calliope Feedback", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
   
   if (geminiResponse.length() > 0) {
     pushMatrix();
@@ -231,19 +245,20 @@ int getWordAtMousePosition() {
 }
 
 void highlightRange(int startIndex, int endIndex) {
-  unhighlightAll();
+  unhighlightUser();
   for (int i = startIndex; i <= endIndex && i < words.size(); i++) {
     words.get(i).isHighlighted = true;
     highlighted += words.get(i).wordText + " ";
-    words.get(i).backgroundColor = HIGHLIGHT_COLOR;
   }
 }
 
-void unhighlightAll() {
+void unhighlightUser() {
   highlighted = "";
   for (Word w : words) {
-    w.isHighlighted = false;
-    w.backgroundColor = color(255);
+    if (w.isHighlighted)
+    {
+      w.isHighlighted = false;
+    }
   }
 }
 
