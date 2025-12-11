@@ -12,6 +12,8 @@ final int WORD_SPACING = 10;
 final int SCROLL_SPEED = 5;
 final int UNHIGHLIGHT_BUTTON_SIZE = 30;
 final color HIGHLIGHT_COLOR = color(173, 216, 250, 100);
+final color YELLOW_HIGHLIGHT = color(255, 255, 0);
+final color GREEN_HIGHLIGHT = color(0, 255, 0);
 
 ArrayList<String> dictionary = new ArrayList();
 int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;
@@ -426,8 +428,8 @@ void highlightTextInEssay(String textToFind, color highlightColor) {
     
     if (match && findWords.length > 0) {
       for (int k = i; k <= matchEnd; k++) {
-        words.get(k).isHighlighted = true;
-        words.get(k).backgroundColor = highlightColor;
+        words.get(k).isProgramHighlighted = true;
+        words.get(k).programHighlightColour = highlightColor;
       }
       found = true;
     }
@@ -450,8 +452,8 @@ void highlightTextInEssay(String textToFind, color highlightColor) {
       int wordEnd = wordStart + split(normalizedFind, ' ').length - 1;
       
       for (int k = wordStart; k <= wordEnd && k < words.size(); k++) {
-        words.get(k).isHighlighted = true;
-        words.get(k).backgroundColor = highlightColor;
+        words.get(k).isProgramHighlighted = true;
+        words.get(k).programHighlightColour = highlightColor;
       }
       
       searchStart = startPos + 1;

@@ -1,13 +1,6 @@
 
 void SetupSpellcheck()
 {
-  //String[] dictionaryArray = loadStrings("words.txt");
-
-  //for (String s : dictionaryArray)
-  //{
-  //  dictionary.add(s);
-  //}
-  
   String[] dictionaryArray = loadStrings("words_alpha.txt");
   
   for (String s : dictionaryArray)
@@ -58,6 +51,8 @@ void AskGemini()
 
   geminiResponse = PromptGeminiForFeedback(essay, highlightedText, userRequest);
 
+  parseAndHighlightGeminiResponse();
+  
   calculateFeedbackScrollBounds();
 }
 
