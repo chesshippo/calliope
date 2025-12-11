@@ -51,6 +51,8 @@ void AskGemini()
   
   geminiResponse = PromptGeminiForFeedback(essay, highlightedText, userRequest);
   
+  parseAndHighlightGeminiResponse();
+  
   calculateFeedbackScrollBounds();
 }
 
