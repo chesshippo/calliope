@@ -34,6 +34,9 @@ String PromptGeminiForFeedback(String fullEssay, String highlightedText, String 
     prompt += "Be specific, constructive, and helpful.";
     prompt += "Include NO special emojis or charcters, stick to punctuation marks, the 26 letters and the 10 numbers.";
     prompt += "Include little fluff and DO NOT mention the prompt, go right into the feedback.";
+    prompt += "If you want to highlight specific text in the essay, you can say \"The text I've highlighted in yellow is [exact text from essay]\" or \"The text I've highlighted in green is [exact text from essay]\". ";
+    prompt += "Use yellow for suggestions or areas that need attention, and green for positive examples or well-written sections. ";
+    prompt += "Make sure to quote the exact text as it appears in the essay.";
     
     Client client = Client.builder().apiKey(API_KEY).build();
     

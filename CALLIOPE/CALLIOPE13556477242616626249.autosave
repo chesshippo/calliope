@@ -1,17 +1,18 @@
 import g4p_controls.*;
 
-final int CANVAS_WIDTH = 1000;
-final int CANVAS_HEIGHT = 650;
-final int TEXT_POSITION_X = 50;
-final int TEXT_POSITION_Y = 100;
-final int TEXT_AREA_WIDTH = 600;
-final int TEXT_AREA_HEIGHT = 400;
-final int TEXT_MARGIN = 20;
-final int LINE_HEIGHT = 30;
-final int WORD_SPACING = 10;
-final int SCROLL_SPEED = 5;
-final int UNHIGHLIGHT_BUTTON_SIZE = 30;
-final color HIGHLIGHT_COLOR = color(173, 216, 250, 100);
+//If you make new paramaters make sure to put them in CONSTANT_CASE
+int CANVAS_WIDTH = 1000;
+int CANVAS_HEIGHT = 650;
+int TEXT_POSITION_X = 50;
+int TEXT_POSITION_Y = 100;
+int TEXT_AREA_WIDTH = 600;
+int TEXT_AREA_HEIGHT = 400;
+int TEXT_MARGIN = 20;
+int LINE_HEIGHT = 30;
+int WORD_SPACING = 10;
+int SCROLL_SPEED = 5;
+int UNHIGHLIGHT_BUTTON_SIZE = 30;
+color HIGHLIGHT_COLOR = color(173, 216, 230);
 
 ArrayList<String> dictionary = new ArrayList();
 int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;
@@ -67,10 +68,6 @@ void draw()
   {
     DrawHomeScreen();
   }
-  else if (stage == WindowStage.Info)
-  {
-    DrawInfoScreen();
-  }
 }
 
 void DrawHomeScreen()
@@ -78,19 +75,7 @@ void DrawHomeScreen()
   background(0, 0, 50);
   textAlign(CENTER);
   textSize(100);
-  fill(255);
   text("CALLIOPE", width / 2, 250);
-}
-
-void DrawInfoScreen()
-{
-  backButton.setVisible(true);
-  startButton.setVisible(false);
-  infoButton.setVisible(false);
-  
-  background(0, 0, 50);
-  
-  
 }
 
 void drawEditingScreen() {
@@ -107,7 +92,7 @@ void drawEditingScreen() {
   fill(50);
   textSize(18);
   textAlign(LEFT, TOP);
-  text("Calliope Feedback", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
+  text("Gemini Feedback", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
   
   if (geminiResponse.length() > 0) {
     pushMatrix();
@@ -245,20 +230,19 @@ int getWordAtMousePosition() {
 }
 
 void highlightRange(int startIndex, int endIndex) {
-  unhighlightUser();
+  unhighlightAll();
   for (int i = startIndex; i <= endIndex && i < words.size(); i++) {
     words.get(i).isHighlighted = true;
     highlighted += words.get(i).wordText + " ";
+    words.get(i).backgroundColor = HIGHLIGHT_COLOR;
   }
 }
 
-void unhighlightUser() {
+void unhighlightAll() {
   highlighted = "";
   for (Word w : words) {
-    if (w.isHighlighted)
-    {
-      w.isHighlighted = false;
-    }
+    w.isHighlighted = false;
+    w.backgroundColor = color(255);
   }
 }
 
@@ -314,154 +298,4 @@ void calculateFeedbackScrollBounds() {
   }
   
   feedbackScrollY = constrain(feedbackScrollY, minFeedbackScrollY, maxFeedbackScrollY);
-}
-
-void parseAndHighlightGeminiResponse() {
-  if (geminiResponse.length() == 0) return;
-  
-  String lowerResponse = geminiResponse.toLowerCase();
-  String[] sentences = split(geminiResponse, '.');
-  
-  for (String sentence : sentences) {
-    String lowerSentence = sentence.toLowerCase();
-    
-    if (lowerSentence.contains("highlighted in yellow")) {
-      String textToHighlight = extractHighlightedText(sentence, "yellow");
-      if (textToHighlight.length() > 0) {
-        highlightTextInEssay(textToHighlight, YELLOW_HIGHLIGHT);
-      }
-    }
-    
-    if (lowerSentence.contains("highlighted in green")) {
-      String textToHighlight = extractHighlightedText(sentence, "green");
-      if (textToHighlight.length() > 0) {
-        highlightTextInEssay(textToHighlight, GREEN_HIGHLIGHT);
-      }
-    }
-  }
-}
-
-String extractHighlightedText(String sentence, String colour) {
-  String lowerSentence = sentence.toLowerCase();
-  String lowerColor = colour.toLowerCase();
-  
-  int startIndex = -1;
-  String[] patterns = {
-    "highlighted in " + lowerColor + " is",
-    "highlighted in " + lowerColor + ":",
-    "highlighted in " + lowerColor + " -",
-    "highlighted in " + lowerColor
-  };
-  
-  for (String pattern : patterns) {
-    if (lowerSentence.contains(pattern)) {
-      startIndex = lowerSentence.indexOf(pattern) + pattern.length();
-      if (startIndex < sentence.length() && sentence.charAt(startIndex) == ' ') {
-        startIndex++;
-      }
-      break;
-    }
-  }
-  
-  if (startIndex == -1 || startIndex >= sentence.length()) return "";
-  
-  String remaining = sentence.substring(startIndex).trim();
-  
-  if (remaining.startsWith("\"") && remaining.length() > 1) {
-    int endQuote = remaining.indexOf("\"", 1);
-    if (endQuote > 0) {
-      return remaining.substring(1, endQuote).trim();
-    }
-  }
-  
-  if (remaining.startsWith("'") && remaining.length() > 1) {
-    int endQuote = remaining.indexOf("'", 1);
-    if (endQuote > 0) {
-      return remaining.substring(1, endQuote).trim();
-    }
-  }
-  
-  int endIndex = remaining.length();
-  String[] endMarkers = {".", ",", ";", " and", " or", " but"};
-  for (String marker : endMarkers) {
-    int markerIndex = remaining.indexOf(marker);
-    if (markerIndex > 0 && markerIndex < endIndex) {
-      endIndex = markerIndex;
-    }
-  }
-  
-  String result = remaining.substring(0, endIndex).trim();
-  if (result.endsWith("\"") && result.length() > 1) {
-    result = result.substring(0, result.length() - 1).trim();
-  }
-  if (result.endsWith("'") && result.length() > 1) {
-    result = result.substring(0, result.length() - 1).trim();
-  }
-  
-  return result;
-}
-
-void highlightTextInEssay(String textToFind, color highlightColor) {
-  if (textToFind.length() == 0) return;
-  
-  String normalizedFind = normalizeText(textToFind);
-  String[] findWords = split(normalizeText(textToFind), ' ');
-  
-  if (findWords.length == 0) return;
-  
-  boolean found = false;
-  
-  for (int i = 0; i < words.size(); i++) {
-    boolean match = true;
-    int matchEnd = i;
-    
-    for (int j = 0; j < findWords.length && (i + j) < words.size(); j++) {
-      String wordText = normalizeText(words.get(i + j).wordText);
-      if (!wordText.equals(findWords[j])) {
-        match = false;
-        break;
-      }
-      matchEnd = i + j;
-    }
-    
-    if (match && findWords.length > 0) {
-      for (int k = i; k <= matchEnd; k++) {
-        words.get(k).isHighlighted = true;
-        words.get(k).backgroundColor = highlightColor;
-      }
-      found = true;
-    }
-  }
-  
-  if (!found) {
-    String fullEssayText = "";
-    for (Word w : words) {
-      fullEssayText += normalizeText(w.wordText) + " ";
-    }
-    
-    int searchStart = 0;
-    while (true) {
-      int startPos = fullEssayText.indexOf(normalizedFind, searchStart);
-      if (startPos == -1) break;
-      
-      String beforeMatch = fullEssayText.substring(0, startPos);
-      String[] beforeWords = split(beforeMatch, ' ');
-      int wordStart = beforeWords.length;
-      int wordEnd = wordStart + split(normalizedFind, ' ').length - 1;
-      
-      for (int k = wordStart; k <= wordEnd && k < words.size(); k++) {
-        words.get(k).isHighlighted = true;
-        words.get(k).backgroundColor = highlightColor;
-      }
-      
-      searchStart = startPos + 1;
-    }
-  }
-}
-
-String normalizeText(String text) {
-  String normalized = text.toLowerCase();
-  normalized = normalized.replaceAll("[^a-z0-9\\s]", "");
-  normalized = normalized.replaceAll("\\s+", " ");
-  return normalized.trim();
 }
