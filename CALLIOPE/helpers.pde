@@ -20,8 +20,8 @@ void DownloadUserManual()
   
   String home = System.getProperty("user.home"); //find home directory and then attatch downloads to get to downloads folder
   String downloads = home + "\\Downloads\\";
-  
-  Path manual = Paths.get("data/manual.txt");
+  String manualPath = dataPath("manual.txt");
+  Path manual = Paths.get(manualPath);
   Path destination = Paths.get(downloads + "manual.txt");
   
   try
@@ -32,8 +32,10 @@ void DownloadUserManual()
   catch (Exception e)
   {
     downloadLabel.setText("Something went wrong.");
+    println(e);
   }
 }
+
 
 void EnterEssayEditor()
 {
@@ -42,6 +44,7 @@ void EnterEssayEditor()
   backButton.setVisible(true);
   controlsWindow.setVisible(true);
   downloadLabel.setVisible(false);
+  downloadLabel.setText("");
   manualDownloadButton.setVisible(false);
 
   stage = WindowStage.EssayHelp;
@@ -54,6 +57,7 @@ void Back()
   backButton.setVisible(false);
   controlsWindow.setVisible(false);
   manualDownloadButton.setVisible(false);
+  downloadLabel.setText("");
   downloadLabel.setVisible(false);
 
   stage = WindowStage.Home;
@@ -66,12 +70,15 @@ void EnterInfoScreen()
   infoButton.setVisible(false);
   manualDownloadButton.setVisible(true);
   downloadLabel.setVisible(true);
+  downloadLabel.setText("");
   
   stage = WindowStage.Info;
 }
 
+
 void AskGemini()
 {
+  promptStatusLabel.setText("Processing request. Please be patient.");
   String userRequest = askAwayField.getText().trim();
   String highlightedText = getHighlightedText();
 
@@ -84,18 +91,20 @@ void AskGemini()
     geminiResponse = "Please enter a question or request in the text field.";
     return;
   }
-
-  println("request received");
-  println("highlighted text: " + highlightedText);
-  println("user request: " + userRequest);
-
+  
   feedbackScrollY = 0;
 
   geminiResponse = PromptGeminiForFeedback(essay, highlightedText, userRequest);
-
+  
   parseAndHighlightGeminiResponse();
   
   calculateFeedbackScrollBounds();
+  
+  if (geminiResponse != "") //if its an empty string, we know the usage limit has been reached, so don't overide the already displayed message about that
+  {
+    promptStatusLabel.setText("");
+  }
+  
 }
 
 void RefreshEssayText()
@@ -107,11 +116,17 @@ void RefreshEssayText()
     filePath = filePath.substring(1, filePath.length() - 1);
   }
 
-  println(filePath);
-
   String[] fullEssay = loadStrings(filePath);
-  printArray(fullEssay);
-
+  
+  if (fullEssay == null)
+  {
+    filepathStatusLabel.setText("Invalid filepath. Ensure file exists and try again.");
+    return;
+  }
+  else
+  {
+    filepathStatusLabel.setText("");
+  }
   String newEssay = "";
 
   for (String essayFragment : fullEssay)
@@ -142,7 +157,7 @@ void PutEssayIntoWords()
   }
   catch (NullPointerException e)
   {
-    println("Error, double check your text file or replace it altogether");
+  
   }
 
   for (Word w : words)

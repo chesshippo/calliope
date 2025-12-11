@@ -1,4 +1,2 @@
-sdfkhsdifh
-df'osdfj
-SPOFH'OASDJ
-AWUGFP0SDJG'OIW
+this file is a placeholder to test out the download manual feature.
+when the real manual gets finished, it will be replaced here.

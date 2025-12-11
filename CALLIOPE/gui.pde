@@ -37,7 +37,15 @@ synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:contr
 } //_CODE_:controlsWindow:814485:
 
 public void OnAskGemini(GButton source, GEvent event) { //_CODE_:askGeminiBbutton:328632:
-  AskGemini();
+  try
+  {
+    thread("AskGemini"); //by running on a seperate thread, the status label gets updated automagically instead of after the entire function has completed. g4p is weird.
+  }
+  catch (Exception e)
+  {
+    promptStatusLabel.setText("Servers overloaded. Try again later"); //only happens if gemini servers have too many requests and wont work (please dont happen while mr schattman is grading this)
+  }
+   
 } //_CODE_:askGeminiBbutton:328632:
 
 public void OnTypeInAskAwayField(GTextArea source, GEvent event) { //_CODE_:askAwayField:298145:
@@ -91,10 +99,10 @@ public void createGUI(){
   controlsWindow.noLoop();
   controlsWindow.setActionOnClose(G4P.KEEP_OPEN);
   controlsWindow.addDrawHandler(this, "win_draw1");
-  askGeminiBbutton = new GButton(controlsWindow, 96, 251, 80, 30);
+  askGeminiBbutton = new GButton(controlsWindow, 110, 270, 80, 30);
   askGeminiBbutton.setText("Ask away!");
   askGeminiBbutton.addEventHandler(this, "OnAskGemini");
-  askAwayField = new GTextArea(controlsWindow, 76, 162, 120, 80, G4P.SCROLLBARS_VERTICAL_ONLY);
+  askAwayField = new GTextArea(controlsWindow, 90, 160, 120, 80, G4P.SCROLLBARS_VERTICAL_ONLY);
   askAwayField.setOpaque(true);
   askAwayField.addEventHandler(this, "OnTypeInAskAwayField");
   essayPathField = new GTextField(controlsWindow, 6, 503, 288, 51, G4P.SCROLLBARS_HORIZONTAL_ONLY);
@@ -105,14 +113,25 @@ public void createGUI(){
   refreshEssayButton.setText("Refresh");
   refreshEssayButton.setLocalColorScheme(GCScheme.RED_SCHEME);
   refreshEssayButton.addEventHandler(this, "OnRefreshEssay");
-  spellcheckButton = new GButton(controlsWindow, 100, 50, 80, 30);
+  spellcheckButton = new GButton(controlsWindow, 110, 80, 80, 30);
   spellcheckButton.setText("Spellcheck");
   spellcheckButton.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   spellcheckButton.addEventHandler(this, "OnSpellcheckButtonClicked");
-  unhighlightButton = new GButton(controlsWindow, 100, 90, 80, 30);
+  unhighlightButton = new GButton(controlsWindow, 110, 120, 80, 30);
   unhighlightButton.setText("Dismiss highlighting");
   unhighlightButton.setLocalColorScheme(GCScheme.ORANGE_SCHEME);
   unhighlightButton.addEventHandler(this, "OnUnhighlightButtonClicked");
+  promptStatusLabel = new GLabel(controlsWindow, 10, 250, 280, 20);
+  promptStatusLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  promptStatusLabel.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  promptStatusLabel.setOpaque(false);
+  filepathStatusLabel = new GLabel(controlsWindow, 15, 484, 271, 20);
+  filepathStatusLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  filepathStatusLabel.setOpaque(false);
+  controlPanelTitle = new GLabel(controlsWindow, 95, 8, 110, 61);
+  controlPanelTitle.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  controlPanelTitle.setText("Calliope Control Panel");
+  controlPanelTitle.setOpaque(false);
   controlsWindow.loop();
 }
 
@@ -130,3 +149,6 @@ GTextField essayPathField;
 GButton refreshEssayButton; 
 GButton spellcheckButton; 
 GButton unhighlightButton; 
+GLabel promptStatusLabel; 
+GLabel filepathStatusLabel; 
+GLabel controlPanelTitle; 

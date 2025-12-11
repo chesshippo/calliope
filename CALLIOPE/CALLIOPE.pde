@@ -31,7 +31,6 @@ ArrayList<Word> words = new ArrayList();
 float scrollY = 0;
 float minScrollY = 0;
 float maxScrollY = 1000;
-
 float feedbackScrollY = 0;
 float minFeedbackScrollY = 0;
 float maxFeedbackScrollY = 0;
