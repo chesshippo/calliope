@@ -20,9 +20,9 @@ void DownloadUserManual()
   
   String home = System.getProperty("user.home"); //find home directory and then attatch downloads to get to downloads folder
   String downloads = home + File.separator + "Downloads" + File.separator;
-  String manualPath = dataPath("manual.txt");
+  String manualPath = dataPath("Calliope.pdf");
   Path manual = Paths.get(manualPath);
-  Path destination = Paths.get(downloads + "manual.txt");
+  Path destination = Paths.get(downloads + "Calliope.pdf");
   
   try
   {

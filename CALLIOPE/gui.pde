@@ -100,10 +100,10 @@ public void createGUI(){
   controlsWindow.noLoop();
   controlsWindow.setActionOnClose(G4P.KEEP_OPEN);
   controlsWindow.addDrawHandler(this, "win_draw1");
-  askGeminiBbutton = new GButton(controlsWindow, 110, 270, 80, 30);
+  askGeminiBbutton = new GButton(controlsWindow, 108, 376, 80, 30);
   askGeminiBbutton.setText("Ask away!");
   askGeminiBbutton.addEventHandler(this, "OnAskGemini");
-  askAwayField = new GTextArea(controlsWindow, 90, 160, 120, 80, G4P.SCROLLBARS_VERTICAL_ONLY);
+  askAwayField = new GTextArea(controlsWindow, 38, 161, 230, 182, G4P.SCROLLBARS_VERTICAL_ONLY);
   askAwayField.setOpaque(true);
   askAwayField.addEventHandler(this, "OnTypeInAskAwayField");
   essayPathField = new GTextField(controlsWindow, 6, 503, 288, 51, G4P.SCROLLBARS_HORIZONTAL_ONLY);
@@ -122,7 +122,7 @@ public void createGUI(){
   unhighlightButton.setText("Dismiss highlighting");
   unhighlightButton.setLocalColorScheme(GCScheme.ORANGE_SCHEME);
   unhighlightButton.addEventHandler(this, "OnUnhighlightButtonClicked");
-  promptStatusLabel = new GLabel(controlsWindow, 10, 250, 280, 20);
+  promptStatusLabel = new GLabel(controlsWindow, 13, 350, 280, 20);
   promptStatusLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
   promptStatusLabel.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
   promptStatusLabel.setOpaque(false);
