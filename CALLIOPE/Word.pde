@@ -1,3 +1,4 @@
+//The following class represents a single word in the essay.
 class Word {
   String wordText;
   int positionInEssay;
@@ -9,6 +10,7 @@ class Word {
   color programHighlightColour;
   boolean isProgramHighlighted;
   
+  //The following function creates a new Word object.
   Word(String text, int pos) {
     wordText = text;
     positionInEssay = pos;
@@ -21,9 +23,11 @@ class Word {
     
   }
   
+  //The following function displays the word on the screen with its highlight if it has one.
   void display(float scrollOffset) {
     float adjustedY = yPosition + scrollOffset;
     
+    //The following draws the program highlight background if the word is program highlighted.
     if (isProgramHighlighted) {
       textSize(16);
       float wordWidth = textWidth(wordText);
@@ -33,6 +37,7 @@ class Word {
       noStroke();
       rect(xPosition, adjustedY - wordHeight + 5, wordWidth, wordHeight);
     }
+    //The following draws the user highlight background if the word is user highlighted.
     if (isHighlighted)
     {
       textSize(16);
@@ -48,6 +53,7 @@ class Word {
     text(wordText, xPosition, adjustedY);
   }
   
+  //The following function checks if the mouse is over this word.
   boolean isMouseOver(float scrollOffset, float mouseX, float mouseY) {
     textSize(16);
     float wordWidth = textWidth(wordText);

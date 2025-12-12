@@ -1,4 +1,5 @@
 
+//The following function loads the dictionary file and fills the dictionary array with words.
 void SetupSpellcheck()
 {
   String[] dictionaryArray = loadStrings("words_alpha.txt");
@@ -8,6 +9,7 @@ void SetupSpellcheck()
     dictionary.add(s);
   }
 }
+//The following function switches the program to the essay editing screen.
 void EnterEssayEditor()
 {
   startButton.setVisible(false);
@@ -18,6 +20,7 @@ void EnterEssayEditor()
   stage = WindowStage.EssayHelp;
 }
 
+//The following function switches the program back to the home screen.
 void Back()
 {
   startButton.setVisible(true);
@@ -28,6 +31,7 @@ void Back()
   stage = WindowStage.Home;
 }
 
+//The following function sends the user's request and highlighted text to Gemini and gets feedback.
 void AskGemini()
 {
   String userRequest = askAwayField.getText().trim();
@@ -56,10 +60,12 @@ void AskGemini()
   calculateFeedbackScrollBounds();
 }
 
+//The following function loads a new essay from a file path and refreshes the display.
 void RefreshEssayText()
 {
   String filePath = essayPathField.getText();
 
+  //The following removes quotes from the file path if they are present.
   if (filePath.contains("\""))
   {
     filePath = filePath.substring(1, filePath.length() - 1);
@@ -70,6 +76,7 @@ void RefreshEssayText()
   String[] fullEssay = loadStrings(filePath);
   printArray(fullEssay);
 
+  //The following combines all lines of the essay into one string.
   String newEssay = "";
 
   for (String essayFragment : fullEssay)
@@ -84,6 +91,7 @@ void RefreshEssayText()
   redraw();
 }
 
+//The following function splits the essay string into individual words and creates Word objects.
 void PutEssayIntoWords()
 {
   try
@@ -91,6 +99,7 @@ void PutEssayIntoWords()
     words.clear();
     String[] wordStrings = split(essay, " ");
 
+    //The following loops through each word string and creates a Word object if it is not empty.
     for (int i = 0; i < wordStrings.length; i++) {
       if (wordStrings[i].length() > 0)
       {
@@ -109,6 +118,7 @@ void PutEssayIntoWords()
   }
 }
 
+//The following function checks each word in the essay against the dictionary and highlights misspelled words.
 void SpellCheckEssay()
 {
   for (int i = 0; i < words.size(); i++)
@@ -116,7 +126,7 @@ void SpellCheckEssay()
     String newWord = "";
     ArrayList<Character> punctuation = new ArrayList();
 
-  //characters to skip so it doesnt confuse spellcheck
+    //The following adds characters to skip so it doesnt confuse spellcheck.
     punctuation.add(':');
     punctuation.add('\"');
     punctuation.add('[');
@@ -151,6 +161,10 @@ void SpellCheckEssay()
     
 
 
+    //The following removes punctuation from the word so it can be checked against the dictionary.
+    //We go through each character in the word and only add it to newWord if it's not in the punctuation list.
+    //This way "word," becomes "word" and "don't" becomes "dont" for dictionary checking.
+    //We keep the original wordText intact for display, we just create a clean version for checking.
     for (int j = 0; j < words.get(i).wordText.length(); j++)
     {
 
@@ -167,6 +181,8 @@ void SpellCheckEssay()
 
     newWord = newWord.toLowerCase();
 
+    //The following highlights the word in red if it is not found in the dictionary.
+    //We use isProgramHighlighted instead of isHighlighted so it doesn't interfere with user highlights.
     if (!dictionary.contains(newWord))
     {
       words.get(i).isProgramHighlighted = true;
@@ -176,6 +192,7 @@ void SpellCheckEssay()
   }
 }
 
+//The following function unhighlights all words, both user highlights and program highlights.
 void unhighlightAll()
 {
   for (Word w : words)
