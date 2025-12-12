@@ -91,9 +91,10 @@ public void createGUI(){
   manualDownloadButton.setText("Download Manual");
   manualDownloadButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
   manualDownloadButton.addEventHandler(this, "OnManualDownloadButtonClicked");
-  downloadLabel = new GLabel(this, 754, 323, 206, 39);
+  downloadLabel = new GLabel(this, 736, 295, 248, 94);
   downloadLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
-  downloadLabel.setLocalColorScheme(GCScheme.RED_SCHEME);
+  downloadLabel.setText("Sucess! Check your downloads folder.");
+  downloadLabel.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
   downloadLabel.setOpaque(false);
   controlsWindow = GWindow.getWindow(this, "Calliope Controls", 0, 0, 300, 600, JAVA2D);
   controlsWindow.noLoop();

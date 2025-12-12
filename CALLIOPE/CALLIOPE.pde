@@ -22,6 +22,9 @@ int FEEDBACK_PANEL_WIDTH = CANVAS_WIDTH - FEEDBACK_PANEL_X - TEXT_POSITION_X;
 int FEEDBACK_PANEL_HEIGHT = TEXT_AREA_HEIGHT;
 int FEEDBACK_MARGIN = 15;
 
+ArrayList<Character> punctuation = new ArrayList();
+
+
 String highlighted = "";
 String geminiResponse = "";
 
@@ -61,6 +64,40 @@ void setup() {
   infoButton.setVisible(true);
   manualDownloadButton.setVisible(false);
   downloadLabel.setVisible(false);
+  
+  
+  
+  //characters to skip so it doesnt confuse things when comparing words in spellcheck and highglighting functions
+  punctuation.add(':');
+  punctuation.add('\"');
+  punctuation.add('[');
+  punctuation.add(']');
+  punctuation.add('(');
+  punctuation.add(')');
+  punctuation.add('.');
+  punctuation.add('?');
+  punctuation.add(',');
+  punctuation.add('\'');
+  punctuation.add('!');
+  punctuation.add(';');
+  punctuation.add('@');
+  punctuation.add('\\');
+  punctuation.add('/');
+  punctuation.add('’');
+  punctuation.add('\'');
+  punctuation.add('“');
+  punctuation.add('”');
+  punctuation.add('0');
+  punctuation.add('1');
+  punctuation.add('2');
+  punctuation.add('3');
+  punctuation.add('4');
+  punctuation.add('5');
+  punctuation.add('6');
+  punctuation.add('7');
+  punctuation.add('8');
+  punctuation.add('9');
+  punctuation.add(' ');
 }
 
 void draw()
@@ -100,7 +137,7 @@ void DrawInfoScreen()
   text("INFO", 500, 100);
   
   textSize(20);
-  text("Welcome to Calliope, the all in one essay helper!", 500, 200);
+  text("Welcome to Calliope, the all-in-one essay helper!", 500, 200);
   text("To get started, click start and\nenter the filepath to your essay\nin the controls window, and hit refresh", 500, 250);
   text("For more details, see the user manual:", 500, 350);
   textSize(30);
@@ -129,7 +166,7 @@ void drawEditingScreen() {
   fill(50);
   textSize(18);
   textAlign(LEFT, TOP);
-  text("Calliope Feedback", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
+  text("Calliope's Thoughts", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
   
   if (geminiResponse.length() > 0) {
     pushMatrix();
@@ -341,149 +378,119 @@ void calculateFeedbackScrollBounds() {
 void parseAndHighlightGeminiResponse() {
   if (geminiResponse.length() == 0) return;
   
-  String lowerResponse = geminiResponse.toLowerCase();
-  String[] sentences = split(geminiResponse, '.');
+  //String lowerResponse = geminiResponse.toLowerCase();
+  //String[] sentences = split(geminiResponse, '.');
   
-  for (String sentence : sentences) {
-    String lowerSentence = sentence.toLowerCase();
+  //for (String sentence : sentences) {
+  //  String lowerSentence = sentence.toLowerCase();
     
-    if (lowerSentence.contains("highlighted in yellow")) {
-      String textToHighlight = extractHighlightedText(sentence, "yellow");
-      if (textToHighlight.length() > 0) {
-        highlightTextInEssay(textToHighlight, YELLOW_HIGHLIGHT);
-      }
+  //  if (lowerSentence.contains("highlighted in yellow")) {
+  //    String textToHighlight = extractHighlightedText(sentence, "yellow");
+  //    if (textToHighlight.length() > 0) {
+  //      highlightTextInEssay(textToHighlight, YELLOW_HIGHLIGHT);
+  //    }
+  //  }
+    
+  //  if (lowerSentence.contains("highlighted in green")) {
+  //    String textToHighlight = extractHighlightedText(sentence, "green");
+  //    if (textToHighlight.length() > 0) {
+  //      highlightTextInEssay(textToHighlight, GREEN_HIGHLIGHT);
+  //    }
+  //  }
+  //}
+  
+  //go through entire response and mark the places of the ^ character
+  ArrayList<Integer> indices = new ArrayList<Integer>();
+  
+  for (int i = 0; i < geminiResponse.length(); i++)
+  {
+    if (geminiResponse.charAt(i) == '^')
+    {
+      indices.add(i);
+    }
+  }
+  
+  //take pairs of the indices and split them up
+  for (int i = 0; i < indices.size(); i += 2)
+  {
+    String quote = geminiResponse.substring(indices.get(i) + 1, indices.get(i + 1));
+    println(quote);
+    //first word will always be the colour;
+    String colour = split(quote, " ")[0]; //can either be (YELLOW) or (GREEN)
+    println(colour);
+    quote = quote.replace(colour, "").trim();
+    quote = quote.replace("^", "");
+    
+    
+    println(quote);
+    
+    if (colour.equals("(YELLOW)"))
+    {
+      highlightTextInEssay(quote, YELLOW_HIGHLIGHT);
+    }
+    else if (colour.equals("(GREEN)"))
+    {
+      highlightTextInEssay(quote, GREEN_HIGHLIGHT);
     }
     
-    if (lowerSentence.contains("highlighted in green")) {
-      String textToHighlight = extractHighlightedText(sentence, "green");
-      if (textToHighlight.length() > 0) {
-        highlightTextInEssay(textToHighlight, GREEN_HIGHLIGHT);
-      }
-    }
-  }
-}
-
-String extractHighlightedText(String sentence, String colour) {
-  String lowerSentence = sentence.toLowerCase();
-  String lowerColor = colour.toLowerCase();
-  
-  int startIndex = -1;
-  String[] patterns = {
-    "highlighted in " + lowerColor + " is",
-    "highlighted in " + lowerColor + ":",
-    "highlighted in " + lowerColor + " -",
-    "highlighted in " + lowerColor
-  };
-  
-  for (String pattern : patterns) {
-    if (lowerSentence.contains(pattern)) {
-      startIndex = lowerSentence.indexOf(pattern) + pattern.length();
-      if (startIndex < sentence.length() && sentence.charAt(startIndex) == ' ') {
-        startIndex++;
-      }
-      break;
-    }
   }
   
-  if (startIndex == -1 || startIndex >= sentence.length()) return "";
-  
-  String remaining = sentence.substring(startIndex).trim();
-  
-  if (remaining.startsWith("\"") && remaining.length() > 1) {
-    int endQuote = remaining.indexOf("\"", 1);
-    if (endQuote > 0) {
-      return remaining.substring(1, endQuote).trim();
-    }
-  }
-  
-  if (remaining.startsWith("'") && remaining.length() > 1) {
-    int endQuote = remaining.indexOf("'", 1);
-    if (endQuote > 0) {
-      return remaining.substring(1, endQuote).trim();
-    }
-  }
-  
-  int endIndex = remaining.length();
-  String[] endMarkers = {".", ",", ";", " and", " or", " but"};
-  for (String marker : endMarkers) {
-    int markerIndex = remaining.indexOf(marker);
-    if (markerIndex > 0 && markerIndex < endIndex) {
-      endIndex = markerIndex;
-    }
-  }
-  
-  String result = remaining.substring(0, endIndex).trim();
-  if (result.endsWith("\"") && result.length() > 1) {
-    result = result.substring(0, result.length() - 1).trim();
-  }
-  if (result.endsWith("'") && result.length() > 1) {
-    result = result.substring(0, result.length() - 1).trim();
-  }
-  
-  return result;
+  geminiResponse = geminiResponse.replace("^", "\""); //get rid of the damn ^
+  geminiResponse = geminiResponse.replace("(GREEN)", "").trim();
+  geminiResponse = geminiResponse.replace("(YELLOW)", "").trim();
 }
 
 void highlightTextInEssay(String textToFind, color highlightColor) {
-  if (textToFind.length() == 0) return;
   
-  String normalizedFind = normalizeText(textToFind);
-  String[] findWords = split(normalizeText(textToFind), ' ');
   
-  if (findWords.length == 0) return;
+  //we have a string of text that we need to look for. we can make a mold of what words we need in what order, and move that mold across the essay until it fits somewhere, and thats where we find our quotation.
   
-  boolean found = false;
+  //set up the list of words
   
-  for (int i = 0; i < words.size(); i++) {
-    boolean match = true;
-    int matchEnd = i;
+  String[] wordsInQuote = split(textToFind, " ");
+  int numWords = wordsInQuote.length;
+  
+  String startingWord = wordsInQuote[0].toLowerCase().trim();
+  String endingWord = wordsInQuote[wordsInQuote.length - 1].toLowerCase().trim();
+  //we have the words arraylist for all the word objects
+  
+  
+  //check for matching starting and ending words
+  for (int i = 0; i < words.size() - numWords + 1; i++)
+  {
     
-    for (int j = 0; j < findWords.length && (i + j) < words.size(); j++) {
-      String wordText = normalizeText(words.get(i + j).wordText);
-      if (!wordText.equals(findWords[j])) {
-        match = false;
-        break;
-      }
-      matchEnd = i + j;
-    }
+
     
-    if (match && findWords.length > 0) {
-      for (int k = i; k <= matchEnd; k++) {
-        words.get(k).isProgramHighlighted = true;
-        words.get(k).programHighlightColour = highlightColor;
+    
+    println(startingWord, words.get(i).wordText.toLowerCase(), words.get(i).wordText.toLowerCase().equals(startingWord));
+    println(endingWord, words.get(i + numWords - 1).wordText.toLowerCase(), words.get(i + numWords - 1).wordText.toLowerCase().equals(endingWord));
+    
+    if (normalizeText(words.get(i).wordText.toLowerCase()).equals(normalizeText(startingWord)) && normalizeText(words.get(i + numWords - 1).wordText.toLowerCase()).equals(normalizeText(endingWord)))
+    {
+      //highlightttt
+      for (int j = i; j < i + numWords; j++)
+      {
+        words.get(j).isProgramHighlighted = true;
+        words.get(j).programHighlightColour = highlightColor;
       }
-      found = true;
+      return;
     }
   }
-  
-  if (!found) {
-    String fullEssayText = "";
-    for (Word w : words) {
-      fullEssayText += normalizeText(w.wordText) + " ";
-    }
-    
-    int searchStart = 0;
-    while (true) {
-      int startPos = fullEssayText.indexOf(normalizedFind, searchStart);
-      if (startPos == -1) break;
-      
-      String beforeMatch = fullEssayText.substring(0, startPos);
-      String[] beforeWords = split(beforeMatch, ' ');
-      int wordStart = beforeWords.length;
-      int wordEnd = wordStart + split(normalizedFind, ' ').length - 1;
-      
-      for (int k = wordStart; k <= wordEnd && k < words.size(); k++) {
-        words.get(k).isProgramHighlighted = true;
-        words.get(k).programHighlightColour = highlightColor;
-      }
-      
-      searchStart = startPos + 1;
-    }
-  }
+  println("highlight not found :(");
 }
 
-String normalizeText(String text) {
-  String normalized = text.toLowerCase();
-  normalized = normalized.replaceAll("[^a-z0-9\\s]", "");
-  normalized = normalized.replaceAll("\\s+", " ");
-  return normalized.trim();
+String normalizeText(String text)
+{
+  String newWord = "";
+  
+    
+  for (int i = 0; i < text.length(); i++)
+  {
+    if (!punctuation.contains(text.charAt(i)))
+    {
+      newWord += text.charAt(i);
+    }
+  }
+  
+  return newWord;
 }

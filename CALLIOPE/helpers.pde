@@ -19,7 +19,7 @@ void DownloadUserManual()
   //if the user needs more on how to use the program, they can easily download the user manual.
   
   String home = System.getProperty("user.home"); //find home directory and then attatch downloads to get to downloads folder
-  String downloads = home + "\\Downloads\\";
+  String downloads = home + File.separator + "Downloads" + File.separator;
   String manualPath = dataPath("manual.txt");
   Path manual = Paths.get(manualPath);
   Path destination = Paths.get(downloads + "manual.txt");
@@ -83,8 +83,8 @@ void AskGemini()
   String highlightedText = getHighlightedText();
 
   if (highlightedText.length() == 0) {
-    geminiResponse = "Please highlight some text first before asking for feedback.";
-    return;
+    //assume the user wants to talk about the essay in general, the highlighted text is just the essay
+    highlightedText = essay;
   }
 
   if (userRequest.length() == 0) {
@@ -171,38 +171,6 @@ void SpellCheckEssay()
   for (int i = 0; i < words.size(); i++)
   {
     String newWord = "";
-    ArrayList<Character> punctuation = new ArrayList();
-
-  //characters to skip so it doesnt confuse spellcheck
-    punctuation.add(':');
-    punctuation.add('\"');
-    punctuation.add('[');
-    punctuation.add(']');
-    punctuation.add('(');
-    punctuation.add(')');
-    punctuation.add('.');
-    punctuation.add('?');
-    punctuation.add(',');
-    punctuation.add('\'');
-    punctuation.add('!');
-    punctuation.add(';');
-    punctuation.add('@');
-    punctuation.add('\\');
-    punctuation.add('/');
-    punctuation.add('’');
-    punctuation.add('\'');
-    punctuation.add('“');
-    punctuation.add('”');
-    punctuation.add('0');
-    punctuation.add('1');
-    punctuation.add('2');
-    punctuation.add('3');
-    punctuation.add('4');
-    punctuation.add('5');
-    punctuation.add('6');
-    punctuation.add('7');
-    punctuation.add('8');
-    punctuation.add('9');
     
     
     
@@ -217,7 +185,7 @@ void SpellCheckEssay()
 
         if (words.get(i).wordText.charAt(j) == '\'')
         {
-          println("apostrophe");
+          //println("apostrophe");
         }
       } 
     }
@@ -228,7 +196,7 @@ void SpellCheckEssay()
     {
       words.get(i).isProgramHighlighted = true;
       words.get(i).programHighlightColour = color(255, 0, 0);
-      println(newWord, words.get(i).wordText);
+      //println(newWord, words.get(i).wordText);
     }
   }
 }
