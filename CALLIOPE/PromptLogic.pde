@@ -50,15 +50,6 @@ String PromptGeminiForFeedback(String fullEssay, String highlightedText, String 
 
   try
   {
-    //Client client = Client.builder().apiKey(API_KEY).build();
-    //GenerateContentResponse response = client.models.generateContent(
-    //  "gemini-2.5-flash",
-    //  prompt,
-    //  null
-    //  );
-
-    //client.close();
-    //String responseText = response.text();
     
     String responseText = PromptGemini(prompt);
 

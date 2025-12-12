@@ -126,7 +126,7 @@ void RefreshEssayText()// for the refresh button. grabs the text file and conver
   
   if (fullEssay == null)
   {
-    filepathStatusLabel.setText("Invalid filepath. Ensure file exists and try again.");
+    filepathStatusLabel.setText("Invalid filepath. Ensure file exists and try again."); //tell the user if its invalid
     return;
   }
   else
@@ -152,7 +152,7 @@ void PutEssayIntoWords() //puts the text file into word objects
 {
   try
   {
-    words.clear();
+    words.clear(); //get rid of current words and make new ones
     String[] wordStrings = split(essay, " ");
 
     for (int i = 0; i < wordStrings.length; i++) {
@@ -165,11 +165,6 @@ void PutEssayIntoWords() //puts the text file into word objects
   catch (NullPointerException e)
   {
     println("error", e);
-  }
-
-  for (Word w : words)
-  {
-    println(w.wordText);
   }
 }
 

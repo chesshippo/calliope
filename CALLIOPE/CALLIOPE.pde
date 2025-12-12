@@ -307,7 +307,7 @@ void calculateScrollBounds() { //depending on how many words we have, calculate 
 
 int getWordAtMousePosition() { //needed for highlighting, gets the word wherever you click
 
-  
+  //if mouse pos isn't on a word, return -1
   if (mouseX < TEXT_POSITION_X || mouseX > TEXT_POSITION_X + TEXT_AREA_WIDTH ||
       mouseY < TEXT_POSITION_Y || mouseY > TEXT_POSITION_Y + TEXT_AREA_HEIGHT) {
     return -1;
@@ -322,7 +322,7 @@ int getWordAtMousePosition() { //needed for highlighting, gets the word wherever
   return -1;
 }
 
-void highlightRange(int startIndex, int endIndex) { //highlight a range of words
+void highlightRange(int startIndex, int endIndex) { //highlight a range of words knowing 2 start and end indexes
   unhighlightUser();
   for (int i = startIndex; i <= endIndex && i < words.size(); i++) {
     words.get(i).isHighlighted = true;
@@ -380,6 +380,7 @@ void calculateFeedbackScrollBounds() { //same calcualtion as the other function 
     currentX += wordWidth;
   }
   
+  //calculate max scroll amounts
   feedbackContentHeight = lineCount * lineHeight;
   float visibleHeight = FEEDBACK_PANEL_HEIGHT - (FEEDBACK_MARGIN * 2) - 30;
   
@@ -479,6 +480,7 @@ String normalizeText(String text) //get rid of any goofy characteres in a string
     
   for (int i = 0; i < text.length(); i++)
   {
+    //go through characters and add to new string, if they are in the puncuation list they aren't included in the string
     if (!punctuation.contains(text.charAt(i)))
     {
       newWord += text.charAt(i);
