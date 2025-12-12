@@ -1,5 +1,7 @@
 import g4p_controls.*;
 
+//constants
+//final means they can't be changed, making them ultra constants (so cool)
 final int CANVAS_WIDTH = 1000;
 final int CANVAS_HEIGHT = 650;
 final int TEXT_POSITION_X = 50;
@@ -15,51 +17,96 @@ final color HIGHLIGHT_COLOR = color(173, 216, 250, 100);
 final color YELLOW_HIGHLIGHT = color(255, 255, 0);
 final color GREEN_HIGHLIGHT = color(0, 255, 0);
 
-ArrayList<String> dictionary = new ArrayList();
-int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;
-int FEEDBACK_PANEL_Y = TEXT_POSITION_Y;
-int FEEDBACK_PANEL_WIDTH = CANVAS_WIDTH - FEEDBACK_PANEL_X - TEXT_POSITION_X;
-int FEEDBACK_PANEL_HEIGHT = TEXT_AREA_HEIGHT;
-int FEEDBACK_MARGIN = 15;
+ArrayList<String> dictionary = new ArrayList(); //dictionary
 
+//variables for the panels on the main editing screen
+final int FEEDBACK_PANEL_X = TEXT_POSITION_X + TEXT_AREA_WIDTH + 20;
+final int FEEDBACK_PANEL_Y = TEXT_POSITION_Y;
+final int FEEDBACK_PANEL_WIDTH = CANVAS_WIDTH - FEEDBACK_PANEL_X - TEXT_POSITION_X;
+final int FEEDBACK_PANEL_HEIGHT = TEXT_AREA_HEIGHT;
+final int FEEDBACK_MARGIN = 15;
+
+ArrayList<Character> punctuation = new ArrayList(); //not really punctuation at this point, just characters that should be ignored when spellchecking and comparing strings
+
+//global variables for the whole program to use
 String highlighted = "";
 String geminiResponse = "";
 
 String essay;
 
 ArrayList<Word> words = new ArrayList();
+
+//scroll stuff so we can scroll in the text areas on screen.
 float scrollY = 0;
 float minScrollY = 0;
 float maxScrollY = 1000;
-
 float feedbackScrollY = 0;
 float minFeedbackScrollY = 0;
 float maxFeedbackScrollY = 0;
 float feedbackContentHeight = 0;
 
-Integer firstSelectedWordIndex = null;
-String API_KEY;
-WindowStage stage = WindowStage.Home;
+Integer firstSelectedWordIndex = null; //Integer allows us to assign it as null as well.
+String API_KEY; //api key for gemini
+WindowStage stage = WindowStage.Home;//enum to track where the user is in the program
 
 
 void setup() {
   createGUI();
   size(1000, 650);
   
-  API_KEY = loadStrings("api_key.txt")[0].trim();
+  API_KEY = loadStrings("api_key.txt")[0].trim(); //yoink api key from a txt file, dont commit key to github cause of webscrapers
+  
+  //set stuff up
   SetupSpellcheck();
   PutEssayIntoWords();
-  
   layoutWords();
-  
   calculateScrollBounds();
   
-  
+  //gui elements
   controlsWindow.setVisible(false);
   backButton.setVisible(false);
+  backButton.setVisible(false);
+  startButton.setVisible(true);
+  infoButton.setVisible(true);
+  manualDownloadButton.setVisible(false);
+  downloadLabel.setVisible(false);
+  
+  
+  
+  //characters to skip so it doesnt confuse things when comparing words in spellcheck and highglighting functions
+  punctuation.add(':');
+  punctuation.add('\"');
+  punctuation.add('[');
+  punctuation.add(']');
+  punctuation.add('(');
+  punctuation.add(')');
+  punctuation.add('.');
+  punctuation.add('?');
+  punctuation.add(',');
+  punctuation.add('\'');
+  punctuation.add('!');
+  punctuation.add(';');
+  punctuation.add('@');
+  punctuation.add('\\');
+  punctuation.add('/');
+  punctuation.add('’');
+  punctuation.add('\'');
+  punctuation.add('“');
+  punctuation.add('”');
+  punctuation.add('0');
+  punctuation.add('1');
+  punctuation.add('2');
+  punctuation.add('3');
+  punctuation.add('4');
+  punctuation.add('5');
+  punctuation.add('6');
+  punctuation.add('7');
+  punctuation.add('8');
+  punctuation.add('9');
+  punctuation.add(' ');
 }
 
-void draw()
+void draw() //3 seperate functions to draw 3 parts of the program, keeps things more organized
 {
   if (stage == WindowStage.EssayHelp)
   {
@@ -86,11 +133,27 @@ void DrawHomeScreen()
 
 void DrawInfoScreen()
 {
-  backButton.setVisible(true);
-  startButton.setVisible(false);
-  infoButton.setVisible(false);
   
   background(0, 0, 50);
+  
+  //info screen
+  textAlign(CENTER);
+  
+  textSize(60);
+  text("INFO", 500, 100);
+  
+  textSize(20);
+  text("Welcome to Calliope, the all-in-one essay helper!", 500, 200);
+  text("To get started, click start and\nenter the filepath to your essay\nin the controls window, and hit refresh", 500, 250);
+  text("For more details, see the user manual:", 500, 350);
+  textSize(30);
+  text("IMPORTANT NOTES:", 500, 400);
+  
+  textSize(20);
+  text("- Do not spam buttons, as it can cause crashes", 500, 450);
+  text("- Only text files may be used to load essays into the program", 500, 480);
+  text("- Calliope can make mistakes. Double check important information.", 500, 510);
+  
   
   
 }
@@ -98,6 +161,7 @@ void DrawInfoScreen()
 void drawEditingScreen() {
   background(0, 0, 50);
   
+  //draw panels for essay and feedback
   fill(240);
   stroke(200);
   rect(TEXT_POSITION_X, TEXT_POSITION_Y, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT);
@@ -106,15 +170,11 @@ void drawEditingScreen() {
   stroke(200);
   rect(FEEDBACK_PANEL_X, FEEDBACK_PANEL_Y, FEEDBACK_PANEL_WIDTH, FEEDBACK_PANEL_HEIGHT);
   
-  fill(50);
-  textSize(18);
-  textAlign(LEFT, TOP);
-  text("Calliope Feedback", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
   
   if (geminiResponse.length() > 0) {
-    pushMatrix();
+    pushMatrix(); //push and pop matrix let us clip rendering of just the words so we can still put other stuff on the screen
     
-    clip(FEEDBACK_PANEL_X, FEEDBACK_PANEL_Y, FEEDBACK_PANEL_WIDTH, FEEDBACK_PANEL_HEIGHT);
+    clip(FEEDBACK_PANEL_X, FEEDBACK_PANEL_Y, FEEDBACK_PANEL_WIDTH, FEEDBACK_PANEL_HEIGHT); //clip lets us contain the rendering to a certain area, makes for very nice and smooth scrolling for the words in the text areas
     
     fill(30);
     textSize(14);
@@ -125,6 +185,7 @@ void drawEditingScreen() {
     float textY = baseTextY + feedbackScrollY;
     float textWidth = FEEDBACK_PANEL_WIDTH - (FEEDBACK_MARGIN * 2);
     
+    //gemini resposne being handled every frame so it updates as it change
     String cleanResponse = geminiResponse;
     cleanResponse = cleanResponse.replace("\n", " ").replace("\r", " ").replace("\t", " ");
     String[] responseWords = split(cleanResponse, ' ');
@@ -132,6 +193,7 @@ void drawEditingScreen() {
     float currentY = textY;
     float lineHeight = 20;
     
+    //string gets put into word objects and displayed.
     for (String word : responseWords) {
       if (word.length() == 0) continue;
       
@@ -148,11 +210,13 @@ void drawEditingScreen() {
     }
     
     popMatrix();
-  } else {
+  } 
+  else 
+  {
     fill(150);
     textSize(12);
     textAlign(LEFT, TOP);
-    text("Highlight text and ask Gemini\nfor feedback...", 
+    text("Highlight text and ask Calliope\nfor feedback...", 
          FEEDBACK_PANEL_X + FEEDBACK_MARGIN, 
          FEEDBACK_PANEL_Y + FEEDBACK_MARGIN + 30);
   }
@@ -161,7 +225,7 @@ void drawEditingScreen() {
   textSize(16);
   textAlign(LEFT, BASELINE);
   
-  pushMatrix();
+  pushMatrix(); //clip again but for feedback panel
   
   clip(TEXT_POSITION_X, TEXT_POSITION_Y, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT);
   
@@ -170,11 +234,22 @@ void drawEditingScreen() {
   }
   
   popMatrix();
- 
+  
   noClip();
+  
+  fill(50);
+  textSize(18);
+  textAlign(LEFT, TOP);
+  fill(255);
+  noStroke();
+  rect(FEEDBACK_PANEL_X, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN - 15, FEEDBACK_PANEL_WIDTH, 40);//rectangle behind the calliope thing so the words dont scroll onto it
+  stroke(5);
+  fill(50);
+  text("Calliope's Thoughts", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN); //draw after the words so it appears on top, add a background to it
+ 
 }
 
-void layoutWords() {
+void layoutWords() { //sets the positions for each word depending on all their different widths
   
   float currentX = TEXT_POSITION_X + TEXT_MARGIN;
   float currentY = TEXT_POSITION_Y + TEXT_MARGIN + LINE_HEIGHT;
@@ -191,6 +266,7 @@ void layoutWords() {
       currentX = TEXT_POSITION_X + TEXT_MARGIN;
     }
     
+    //add the constant spacing and keep looping to assign positions
     w.lineNumber = currentLine;
     w.xPosition = currentX;
     w.yPosition = currentY;
@@ -199,14 +275,14 @@ void layoutWords() {
   }
 }
 
-void calculateScrollBounds() {
+void calculateScrollBounds() { //depending on how many words we have, calculate how much we are allowed scroll to prevent words from going off screen.
   if (words.size() == 0) {
     minScrollY = 0;
     maxScrollY = 0;
     return;
   }
   
- 
+ //take the limits of the boundaries of the box and then use it to calculate scroll height
   float topMargin = TEXT_POSITION_Y + TEXT_MARGIN + LINE_HEIGHT;
   
   float bottomY = 0;
@@ -229,9 +305,9 @@ void calculateScrollBounds() {
 }
 
 
-int getWordAtMousePosition() {
+int getWordAtMousePosition() { //needed for highlighting, gets the word wherever you click
 
-  
+  //if mouse pos isn't on a word, return -1
   if (mouseX < TEXT_POSITION_X || mouseX > TEXT_POSITION_X + TEXT_AREA_WIDTH ||
       mouseY < TEXT_POSITION_Y || mouseY > TEXT_POSITION_Y + TEXT_AREA_HEIGHT) {
     return -1;
@@ -246,7 +322,7 @@ int getWordAtMousePosition() {
   return -1;
 }
 
-void highlightRange(int startIndex, int endIndex) {
+void highlightRange(int startIndex, int endIndex) { //highlight a range of words knowing 2 start and end indexes
   unhighlightUser();
   for (int i = startIndex; i <= endIndex && i < words.size(); i++) {
     words.get(i).isHighlighted = true;
@@ -254,7 +330,7 @@ void highlightRange(int startIndex, int endIndex) {
   }
 }
 
-void unhighlightUser() {
+void unhighlightUser() { //unhighlight whatever the user highlights
   highlighted = "";
   for (Word w : words) {
     if (w.isHighlighted)
@@ -264,7 +340,7 @@ void unhighlightUser() {
   }
 }
 
-String getHighlightedText() {
+String getHighlightedText() { //for the gemini prompts, gets the highlighted text as context
   String highlightedText = "";
   for (Word w : words) {
     if (w.isHighlighted) {
@@ -274,7 +350,7 @@ String getHighlightedText() {
   return highlightedText.trim();
 }
 
-void calculateFeedbackScrollBounds() {
+void calculateFeedbackScrollBounds() { //same calcualtion as the other function but just for the feedback panel
   if (geminiResponse.length() == 0) {
     feedbackContentHeight = 0;
     minFeedbackScrollY = 0;
@@ -304,6 +380,7 @@ void calculateFeedbackScrollBounds() {
     currentX += wordWidth;
   }
   
+  //calculate max scroll amounts
   feedbackContentHeight = lineCount * lineHeight;
   float visibleHeight = FEEDBACK_PANEL_HEIGHT - (FEEDBACK_MARGIN * 2) - 30;
   
@@ -318,152 +395,97 @@ void calculateFeedbackScrollBounds() {
   feedbackScrollY = constrain(feedbackScrollY, minFeedbackScrollY, maxFeedbackScrollY);
 }
 
-void parseAndHighlightGeminiResponse() {
+void parseAndHighlightGeminiResponse() { //go through gemini response and get the info we need
   if (geminiResponse.length() == 0) return;
   
-  String lowerResponse = geminiResponse.toLowerCase();
-  String[] sentences = split(geminiResponse, '.');
   
-  for (String sentence : sentences) {
-    String lowerSentence = sentence.toLowerCase();
+  //go through entire response and mark the places of the ^ character
+  ArrayList<Integer> indices = new ArrayList<Integer>();
+  
+  for (int i = 0; i < geminiResponse.length(); i++)
+  {
+    if (geminiResponse.charAt(i) == '^')
+    {
+      indices.add(i);
+    }
+  }
+  
+  //take pairs of the indices and split them up
+  for (int i = 0; i < indices.size(); i += 2)
+  {
+    String quote = geminiResponse.substring(indices.get(i) + 1, indices.get(i + 1));
+    println(quote);
+    //first word will always be the colour;
+    String colour = split(quote, " ")[0]; //can either be (YELLOW) or (GREEN)
+    println(colour);
+    quote = quote.replace(colour, "").trim();
+    quote = quote.replace("^", ""); //get rid of the ugly ahh ^
     
-    if (lowerSentence.contains("highlighted in yellow")) {
-      String textToHighlight = extractHighlightedText(sentence, "yellow");
-      if (textToHighlight.length() > 0) {
-        highlightTextInEssay(textToHighlight, YELLOW_HIGHLIGHT);
-      }
+    
+    println(quote);
+    
+    if (colour.equals("(YELLOW)"))
+    {
+      highlightTextInEssay(quote, YELLOW_HIGHLIGHT);
+    }
+    else if (colour.equals("(GREEN)"))
+    {
+      highlightTextInEssay(quote, GREEN_HIGHLIGHT);
     }
     
-    if (lowerSentence.contains("highlighted in green")) {
-      String textToHighlight = extractHighlightedText(sentence, "green");
-      if (textToHighlight.length() > 0) {
-        highlightTextInEssay(textToHighlight, GREEN_HIGHLIGHT);
-      }
-    }
-  }
-}
-
-String extractHighlightedText(String sentence, String colour) {
-  String lowerSentence = sentence.toLowerCase();
-  String lowerColor = colour.toLowerCase();
-  
-  int startIndex = -1;
-  String[] patterns = {
-    "highlighted in " + lowerColor + " is",
-    "highlighted in " + lowerColor + ":",
-    "highlighted in " + lowerColor + " -",
-    "highlighted in " + lowerColor
-  };
-  
-  for (String pattern : patterns) {
-    if (lowerSentence.contains(pattern)) {
-      startIndex = lowerSentence.indexOf(pattern) + pattern.length();
-      if (startIndex < sentence.length() && sentence.charAt(startIndex) == ' ') {
-        startIndex++;
-      }
-      break;
-    }
   }
   
-  if (startIndex == -1 || startIndex >= sentence.length()) return "";
-  
-  String remaining = sentence.substring(startIndex).trim();
-  
-  if (remaining.startsWith("\"") && remaining.length() > 1) {
-    int endQuote = remaining.indexOf("\"", 1);
-    if (endQuote > 0) {
-      return remaining.substring(1, endQuote).trim();
-    }
-  }
-  
-  if (remaining.startsWith("'") && remaining.length() > 1) {
-    int endQuote = remaining.indexOf("'", 1);
-    if (endQuote > 0) {
-      return remaining.substring(1, endQuote).trim();
-    }
-  }
-  
-  int endIndex = remaining.length();
-  String[] endMarkers = {".", ",", ";", " and", " or", " but"};
-  for (String marker : endMarkers) {
-    int markerIndex = remaining.indexOf(marker);
-    if (markerIndex > 0 && markerIndex < endIndex) {
-      endIndex = markerIndex;
-    }
-  }
-  
-  String result = remaining.substring(0, endIndex).trim();
-  if (result.endsWith("\"") && result.length() > 1) {
-    result = result.substring(0, result.length() - 1).trim();
-  }
-  if (result.endsWith("'") && result.length() > 1) {
-    result = result.substring(0, result.length() - 1).trim();
-  }
-  
-  return result;
+  geminiResponse = geminiResponse.replace("^", "\""); //get rid of the damn ^
+  geminiResponse = geminiResponse.replace("(GREEN)", "").trim();
+  geminiResponse = geminiResponse.replace("(YELLOW)", "").trim();
 }
 
 void highlightTextInEssay(String textToFind, color highlightColor) {
-  if (textToFind.length() == 0) return;
   
-  String normalizedFind = normalizeText(textToFind);
-  String[] findWords = split(normalizeText(textToFind), ' ');
   
-  if (findWords.length == 0) return;
+  //we have a string of text that we need to look for. we can make a mold of what words we need in what order, and move that mold across the essay until it fits somewhere, and thats where we find our quotation.
   
-  boolean found = false;
+  //set up the list of words
   
-  for (int i = 0; i < words.size(); i++) {
-    boolean match = true;
-    int matchEnd = i;
+  String[] wordsInQuote = split(textToFind, " ");
+  int numWords = wordsInQuote.length;
+  
+  String startingWord = wordsInQuote[0].toLowerCase().trim();
+  String endingWord = wordsInQuote[wordsInQuote.length - 1].toLowerCase().trim();
+  //we have the words arraylist for all the word objects
+  
+  
+  //check for matching starting and ending words
+  for (int i = 0; i < words.size() - numWords + 1; i++)
+  {
     
-    for (int j = 0; j < findWords.length && (i + j) < words.size(); j++) {
-      String wordText = normalizeText(words.get(i + j).wordText);
-      if (!wordText.equals(findWords[j])) {
-        match = false;
-        break;
+    if (normalizeText(words.get(i).wordText.toLowerCase()).equals(normalizeText(startingWord)) && normalizeText(words.get(i + numWords - 1).wordText.toLowerCase()).equals(normalizeText(endingWord)))
+    {
+      //highlightttt if found
+      for (int j = i; j < i + numWords; j++)
+      {
+        words.get(j).isProgramHighlighted = true;
+        words.get(j).programHighlightColour = highlightColor;
       }
-      matchEnd = i + j;
-    }
-    
-    if (match && findWords.length > 0) {
-      for (int k = i; k <= matchEnd; k++) {
-        words.get(k).isProgramHighlighted = true;
-        words.get(k).programHighlightColour = highlightColor;
-      }
-      found = true;
+      return;
     }
   }
-  
-  if (!found) {
-    String fullEssayText = "";
-    for (Word w : words) {
-      fullEssayText += normalizeText(w.wordText) + " ";
-    }
-    
-    int searchStart = 0;
-    while (true) {
-      int startPos = fullEssayText.indexOf(normalizedFind, searchStart);
-      if (startPos == -1) break;
-      
-      String beforeMatch = fullEssayText.substring(0, startPos);
-      String[] beforeWords = split(beforeMatch, ' ');
-      int wordStart = beforeWords.length;
-      int wordEnd = wordStart + split(normalizedFind, ' ').length - 1;
-      
-      for (int k = wordStart; k <= wordEnd && k < words.size(); k++) {
-        words.get(k).isProgramHighlighted = true;
-        words.get(k).programHighlightColour = highlightColor;
-      }
-      
-      searchStart = startPos + 1;
-    }
-  }
+  println("highlight not found :(");
 }
 
-String normalizeText(String text) {
-  String normalized = text.toLowerCase();
-  normalized = normalized.replaceAll("[^a-z0-9\\s]", "");
-  normalized = normalized.replaceAll("\\s+", " ");
-  return normalized.trim();
+String normalizeText(String text) //get rid of any goofy characteres in a string like ' or ; so we can spellcheck and compare
+{
+  String newWord = "";
+  
+    
+  for (int i = 0; i < text.length(); i++)
+  {
+    //go through characters and add to new string, if they are in the puncuation list they aren't included in the string
+    if (!punctuation.contains(text.charAt(i)))
+    {
+      newWord += text.charAt(i);
+    }
+  }
+  
+  return newWord;
 }

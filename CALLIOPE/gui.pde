@@ -15,7 +15,7 @@
  */
 
 public void OnInfoClicked(GButton source, GEvent event) { //_CODE_:infoButton:464716:
-  stage = WindowStage.Info;
+  EnterInfoScreen();
 } //_CODE_:infoButton:464716:
 
 public void OnStartClicked(GButton source, GEvent event) { //_CODE_:startButton:936311:
@@ -28,12 +28,24 @@ public void OnBackClicked(GButton source, GEvent event) { //_CODE_:backButton:37
   Back();
 } //_CODE_:backButton:373704:
 
+public void OnManualDownloadButtonClicked(GButton source, GEvent event) { //_CODE_:manualDownloadButton:903249:
+  DownloadUserManual();
+} //_CODE_:manualDownloadButton:903249:
+
 synchronized public void win_draw1(PApplet appc, GWinData data) { //_CODE_:controlsWindow:814485:
   appc.background(230);
 } //_CODE_:controlsWindow:814485:
 
 public void OnAskGemini(GButton source, GEvent event) { //_CODE_:askGeminiBbutton:328632:
-  AskGemini();
+  try
+  {
+    thread("AskGemini"); //by running on a seperate thread, the status label gets updated automagically instead of after the entire function has completed. g4p is weird.
+  }
+  catch (Exception e)
+  {
+    promptStatusLabel.setText("Servers overloaded. Try again later"); //only happens if gemini servers have too many requests and wont work (please dont happen while mr schattman is grading this)
+  }
+   
 } //_CODE_:askGeminiBbutton:328632:
 
 public void OnTypeInAskAwayField(GTextArea source, GEvent event) { //_CODE_:askAwayField:298145:
@@ -75,14 +87,23 @@ public void createGUI(){
   backButton.setText("Back");
   backButton.setLocalColorScheme(GCScheme.RED_SCHEME);
   backButton.addEventHandler(this, "OnBackClicked");
+  manualDownloadButton = new GButton(this, 668, 326, 80, 30);
+  manualDownloadButton.setText("Download Manual");
+  manualDownloadButton.setLocalColorScheme(GCScheme.GOLD_SCHEME);
+  manualDownloadButton.addEventHandler(this, "OnManualDownloadButtonClicked");
+  downloadLabel = new GLabel(this, 736, 295, 248, 94);
+  downloadLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  downloadLabel.setText("Sucess! Check your downloads folder.");
+  downloadLabel.setLocalColorScheme(GCScheme.YELLOW_SCHEME);
+  downloadLabel.setOpaque(false);
   controlsWindow = GWindow.getWindow(this, "Calliope Controls", 0, 0, 300, 600, JAVA2D);
   controlsWindow.noLoop();
   controlsWindow.setActionOnClose(G4P.KEEP_OPEN);
   controlsWindow.addDrawHandler(this, "win_draw1");
-  askGeminiBbutton = new GButton(controlsWindow, 96, 251, 80, 30);
+  askGeminiBbutton = new GButton(controlsWindow, 108, 376, 80, 30);
   askGeminiBbutton.setText("Ask away!");
   askGeminiBbutton.addEventHandler(this, "OnAskGemini");
-  askAwayField = new GTextArea(controlsWindow, 76, 162, 120, 80, G4P.SCROLLBARS_VERTICAL_ONLY);
+  askAwayField = new GTextArea(controlsWindow, 38, 161, 230, 182, G4P.SCROLLBARS_VERTICAL_ONLY);
   askAwayField.setOpaque(true);
   askAwayField.addEventHandler(this, "OnTypeInAskAwayField");
   essayPathField = new GTextField(controlsWindow, 6, 503, 288, 51, G4P.SCROLLBARS_HORIZONTAL_ONLY);
@@ -93,14 +114,25 @@ public void createGUI(){
   refreshEssayButton.setText("Refresh");
   refreshEssayButton.setLocalColorScheme(GCScheme.RED_SCHEME);
   refreshEssayButton.addEventHandler(this, "OnRefreshEssay");
-  spellcheckButton = new GButton(controlsWindow, 100, 50, 80, 30);
+  spellcheckButton = new GButton(controlsWindow, 110, 80, 80, 30);
   spellcheckButton.setText("Spellcheck");
   spellcheckButton.setLocalColorScheme(GCScheme.GREEN_SCHEME);
   spellcheckButton.addEventHandler(this, "OnSpellcheckButtonClicked");
-  unhighlightButton = new GButton(controlsWindow, 100, 90, 80, 30);
+  unhighlightButton = new GButton(controlsWindow, 110, 120, 80, 30);
   unhighlightButton.setText("Dismiss highlighting");
   unhighlightButton.setLocalColorScheme(GCScheme.ORANGE_SCHEME);
   unhighlightButton.addEventHandler(this, "OnUnhighlightButtonClicked");
+  promptStatusLabel = new GLabel(controlsWindow, 13, 350, 280, 20);
+  promptStatusLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  promptStatusLabel.setLocalColorScheme(GCScheme.PURPLE_SCHEME);
+  promptStatusLabel.setOpaque(false);
+  filepathStatusLabel = new GLabel(controlsWindow, 15, 484, 271, 20);
+  filepathStatusLabel.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  filepathStatusLabel.setOpaque(false);
+  controlPanelTitle = new GLabel(controlsWindow, 95, 8, 110, 61);
+  controlPanelTitle.setTextAlign(GAlign.CENTER, GAlign.MIDDLE);
+  controlPanelTitle.setText("Calliope Control Panel");
+  controlPanelTitle.setOpaque(false);
   controlsWindow.loop();
 }
 
@@ -109,6 +141,8 @@ public void createGUI(){
 GButton infoButton; 
 GButton startButton; 
 GButton backButton; 
+GButton manualDownloadButton; 
+GLabel downloadLabel; 
 GWindow controlsWindow;
 GButton askGeminiBbutton; 
 GTextArea askAwayField; 
@@ -116,3 +150,6 @@ GTextField essayPathField;
 GButton refreshEssayButton; 
 GButton spellcheckButton; 
 GButton unhighlightButton; 
+GLabel promptStatusLabel; 
+GLabel filepathStatusLabel; 
+GLabel controlPanelTitle; 
