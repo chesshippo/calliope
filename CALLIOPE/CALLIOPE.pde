@@ -170,10 +170,6 @@ void drawEditingScreen() {
   stroke(200);
   rect(FEEDBACK_PANEL_X, FEEDBACK_PANEL_Y, FEEDBACK_PANEL_WIDTH, FEEDBACK_PANEL_HEIGHT);
   
-  fill(50);
-  textSize(18);
-  textAlign(LEFT, TOP);
-  text("Calliope's Thoughts", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN);
   
   if (geminiResponse.length() > 0) {
     pushMatrix(); //push and pop matrix let us clip rendering of just the words so we can still put other stuff on the screen
@@ -214,7 +210,9 @@ void drawEditingScreen() {
     }
     
     popMatrix();
-  } else {
+  } 
+  else 
+  {
     fill(150);
     textSize(12);
     textAlign(LEFT, TOP);
@@ -236,8 +234,19 @@ void drawEditingScreen() {
   }
   
   popMatrix();
- 
+  
   noClip();
+  
+  fill(50);
+  textSize(18);
+  textAlign(LEFT, TOP);
+  fill(255);
+  noStroke();
+  rect(FEEDBACK_PANEL_X, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN - 15, FEEDBACK_PANEL_WIDTH, 40);//rectangle behind the calliope thing so the words dont scroll onto it
+  stroke(5);
+  fill(50);
+  text("Calliope's Thoughts", FEEDBACK_PANEL_X + FEEDBACK_MARGIN, FEEDBACK_PANEL_Y + FEEDBACK_MARGIN); //draw after the words so it appears on top, add a background to it
+ 
 }
 
 void layoutWords() { //sets the positions for each word depending on all their different widths
